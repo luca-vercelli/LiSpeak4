@@ -13,7 +13,7 @@ Install as root:
 Install in user's folder:
 
 	(first, install all dependencies as root...)
-    make --prefix=~/.local --exec_prefix=~
-    make install
+    make
+    make install --prefix=~/.local --exec_prefix=~
     ~/bin/lispeak-settings
 
