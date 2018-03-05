@@ -1,8 +1,21 @@
 
+#see https://www.gnu.org/prep/standards/html_node/Directory-Variables.html
+prefix=/usr/local
+exec_prefix=$(prefix)
+bindir=$(exec_prefix)/bin
+datarootdir=$(prefix)/share
+datadir=$(datarootdir)
+sysconfdir=$(prefix)/etc
+mandir=$(datarootdir)/man
+DESTDIR=
 
+#TODO
+#if user is not root, should switch to 
+#bindir=~/bin
+#datarootdir=~/.local/share
 
-#TODO: install:
-cp lispeak-settings.py /usr/bin/lispeak-settings  #OR other bin folder, e.g. ~/bin
-cp settings.glade /usr/share/lispeak/glade        #OR ~/.local/share/lispeak/glade
-cp mic.png /usr/share/lispeak/glade               #OR ~/.local/share/lispeak/glade
+install:
+	cp lispeak-settings.py $(DESTDIR)$(bindir)/lispeak-settings
+	cp settings.glade $(DESTDIR)$(datarootdir)/lispeak/glade
+	cp mic.png $(DESTDIR)$(datarootdir)/lispeak/glade
 
