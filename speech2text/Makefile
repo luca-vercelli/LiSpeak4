@@ -9,11 +9,32 @@ sysconfdir=$(prefix)/etc
 mandir=$(datarootdir)/man
 DESTDIR=
 
+JARNAME=speech2text-0.1.jar
+JARLINK=speech2text.jar
 
-make:
+#AFAIK, we have 2 possibilities to run a JAR:
+#(1) create a script that simply contains "java -jar myfile.jar"
+#(2) let Linux to know how to open jar's
+
+all:
 	mvn package
 
-install:
+mkinstalldirs:
+	mkdir -p $(DESTDIR)$(bindir)
+	mkdir -p $(DESTDIR)$(datarootdir)/java
+
+install: mkinstalldirs
 	#in Debian, use mh instead
-	cp target/*.jar $(DESTDIR)$(datarootdir)/java
-	cp src/main/sh/* $(DESTDIR)$(bindir)
+	cp target/$(JARNAME) $(DESTDIR)$(datarootdir)/java
+	ln -s $(DESTDIR)$(datarootdir)/java/$(JARNAME) $(DESTDIR)$(datarootdir)/java/$(JARLINK)
+	cp src/main/sh/lispeak-start.sh $(DESTDIR)$(bindir)/lispeak-start
+	chmod a+x $(DESTDIR)$(bindir)/lispeak-start
+
+uninstall:
+	rm -rf $(DESTDIR)$(bindir)/lispeak-start
+	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARLINK)
+	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARNAME)
+
+clean:
+	mvn clean
+
