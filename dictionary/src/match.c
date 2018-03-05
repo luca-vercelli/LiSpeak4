@@ -557,7 +557,7 @@ int is_match(char *speech,char *buf,struct config *cfg) {
   return check_equality(speechPtr,ptr,cfg);
 }
 
-inline int is_eow(char c) {
+int is_eow(char c) {
 return c == ' ' || c == ',' || c == ';' || c == '.' || c == ':' ;
 }
 
