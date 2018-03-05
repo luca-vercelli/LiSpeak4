@@ -21,6 +21,8 @@ public class App {
 
 		Configuration configuration = getConfiguration(LANG_DEFAULT);
 
+		//TODO some kind of notification to user???
+		
 		microphoneToStream(configuration, System.out);
 	}
 

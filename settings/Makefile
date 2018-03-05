@@ -9,13 +9,25 @@ sysconfdir=$(prefix)/etc
 mandir=$(datarootdir)/man
 DESTDIR=
 
-#TODO
-#if user is not root, should switch to 
-#bindir=~/bin
-#datarootdir=~/.local/share
+#if user is not root, should run with: 
+#make install prefix=~/.local exec_prefix=~
 
-install:
+all:
+	#nothing to do
+
+clean:
+	#nothing to do
+
+mkinstalldirs:
+	mkdir -p $(DESTDIR)$(bindir)
+	mkdir -p $(DESTDIR)$(datarootdir)/lispeak/glade
+
+install: mkinstalldirs
 	cp lispeak-settings.py $(DESTDIR)$(bindir)/lispeak-settings
 	cp settings.glade $(DESTDIR)$(datarootdir)/lispeak/glade
 	cp mic.png $(DESTDIR)$(datarootdir)/lispeak/glade
+
+uninstall:
+	rm -rf $(DESTDIR)$(datarootdir)/lispeak/glade
+	rm -rf $(DESTDIR)$(bindir)/lispeak-settings
 

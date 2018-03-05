@@ -25,9 +25,25 @@ $(EXECUTABLE): $(OBJECTS)
 check-syntax:
 	$(CC) $(CFLAGS) -fsyntax-only $(SOURCES)
 
-install:
+mkinstalldirs:
+	mkdir -p $(DESTDIR)$(bindir)
+	mkdir -p $(DESTDIR)$(mandir)/man1
+	mkdir -p $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/
+	mkdir -p $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/
+
+install: mkinstalldirs
 	cp $(EXECUTABLE) $(DESTDIR)$(bindir)
-	cp manpages/$(EXECUTABLE) $(DESTDIR)$(mandir)
+	cp manpages/$(EXECUTABLE) $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1
+	gzip $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1
 	cp lidic.lang $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/
 	cp lidic.lang $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/
-	
+
+uninstall:
+	rm -rf $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/lidic.lang
+	rm -rf $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/lidic.lang
+	rm -rf $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1.gz
+	rm -rf $(DESTDIR)$(bindir)/$(EXECUTABLE)
+
+clean:
+	rm -rf $(EXECUTABLE)
+

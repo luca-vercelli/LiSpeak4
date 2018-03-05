@@ -14,6 +14,14 @@ Install in user's folder:
 
 	(first, install all dependencies as root...)
     make
-    make install --prefix=~/.local --exec_prefix=~
+    make install prefix=~/.local exec_prefix=~
     ~/bin/lispeak-settings
+
+Uninstall with
+
+    sudo make uninstall
+
+or
+
+    make install prefix=~/.local exec_prefix=~
 
