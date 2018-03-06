@@ -25,13 +25,14 @@ mkinstalldirs:
 
 install: mkinstalldirs
 	#in Debian, use mh instead
-	cp target/$(JARNAME) $(DESTDIR)$(datarootdir)/java
+	install -m 775 target/$(JARNAME) $(DESTDIR)$(datarootdir)/java
 	ln -s $(DESTDIR)$(datarootdir)/java/$(JARNAME) $(DESTDIR)$(datarootdir)/java/$(JARLINK)
-	cp src/main/sh/lispeak-start.sh $(DESTDIR)$(bindir)/lispeak-start
-	chmod a+x $(DESTDIR)$(bindir)/lispeak-start
+	install -m 775 src/main/sh/lispeak-start.sh $(DESTDIR)$(bindir)/lispeak-start
+	install -m 775 src/main/sh/lispeak-start.sh $(DESTDIR)$(bindir)/lispeak-stop
 
 uninstall:
 	rm -rf $(DESTDIR)$(bindir)/lispeak-start
+	rm -rf $(DESTDIR)$(bindir)/lispeak-stop
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARLINK)
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARNAME)
 
