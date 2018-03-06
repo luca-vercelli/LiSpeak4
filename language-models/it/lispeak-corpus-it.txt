@@ -1,0 +1,153 @@
+di
+dimmi
+annulla
+rifai
+taglia
+incolla il testo
+copia
+copia il testo
+copia la selezione
+seleziona tutto
+seleziona tutto  il testo
+vai
+vai a
+leggi
+leggi il testo
+leggi questo testo
+blocca
+blocca computer
+blocca il computer
+apri i miei documenti
+visualizza i miei documenti
+apri i miei files
+apri la cartella dei documenti
+apri la cartella dei miei documenti
+apri i miei file musicali
+apri i miei files musicali
+apri i miei video
+apri i miei file multimediali
+apri i miei media
+apri le mie immagini
+apri le mie foto
+apri le mie picture
+apri la cartella delle mie immagini
+apri i download
+apri la cartella dei download
+apri google
+cerca
+cerca su google
+ricerca
+cerca su wolfram
+cerca su youtube
+apri youtube
+dov'è
+dove è 
+dove si trova
+dove sta
+apri word
+apri excel
+lancia word
+lancia excel
+lancia openoffice writer
+lancia openoffice calc
+apri firefox
+apri internet
+apri il browser
+apri chrome
+apri chromium
+apri mozilla
+apri thunderbird
+apri outlook
+apri amarok
+apri impress
+apri powerpoint
+apri gimp
+apri draw
+apri un foglio di calcolo
+apri un programma di videoscrittura
+apri notepad
+apri gedit
+apri un editor
+apri la calcolatrice
+gestione dei dischi
+gestione disco
+scrivi una mail
+invia una mail
+aggiungi in rubrica
+aggiungi un contatto alla rubrica
+aggiorna il sistema
+aggiorna il computer
+aggiorna il pc
+apri gli aggiornamenti
+data
+che data è 
+che giorno è oggi
+che giorno è adesso
+che ora è
+che ore sono
+che ora è adesso
+qual è il mio ip
+come mi chiamo
+qual è il mio nome
+canzone
+ascolta una canzone
+ascolta il brano
+fai partire la canzione
+fai partire questa canzone
+abbassa il volume
+alza il volume
+ferma il brano
+ferma la canzone
+silenzioso
+silenzio
+stop
+modalità silenziosa
+modalità muto
+muto
+pausa
+play
+esegui
+canzone precedente
+canzone successiva
+traccia precedente
+traccia successiva
+dettato
+inizia la modalità dettato
+fine il modo dettato
+ferma la modalità dettato
+fine della modalità dettato
+esci della modalità dettato
+fine del modo dettato
+esci del modo dettato
+statistiche della batteria
+uso batteria
+consumo batteria
+percentuale utilizzo batteria
+impostazioni del mouse
+impostazioni della tastiera
+impostazioni dello schermo
+suoni di sistema
+settings utenti
+impostazioni sicurezza
+impostazioni blutooth
+connetti dispositivo bluetooth
+elenco dispositivi bluetooth
+risoluzione dello scehrmo
+risoluzione del monitor
+aumenta risoluzione del monitor
+diminuisci risoluzione del monitor
+luca
+daniela
+sara
+carlo
+carla
+alberto
+pierangela
+paolo
+silvia
+simona
+ada
+daniela
+luciano
+
+
