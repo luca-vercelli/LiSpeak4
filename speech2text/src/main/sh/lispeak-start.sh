@@ -5,17 +5,17 @@
 
 #FIXME paths should be set up by make ?!?
 jarlocation=/usr/local/share/java
-pidlocation=/var/run
+pidfile=/var/run/lispeak.pid
 
 
-if [ -e "$pidlocation/lispeak.pid" ];
+if [ -e "$pidfile" ];
 then
-	echo "Found PID file: $pidlocation/lispeak.pid"
+	echo "Found PID file: $pidfile"
 	echo "This means either $0 is already in execution, or it halted abnormally."
 	exit 1
 fi
 
 java -jar $(jarlocation)/speech2text.jar &
 
-echo $! > $(pidlocation)/$0.pid
+echo $! > $(pidfile)
 

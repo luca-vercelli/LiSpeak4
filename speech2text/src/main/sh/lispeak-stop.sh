@@ -3,12 +3,12 @@
 #FIXME shouldn't lispeak be a service?
 
 #FIXME paths should be set up by make ?!?
-pidlocation=/var/run
+pidfile=/var/run/lispeak.pid
 
 
-if [ -e "$pidlocation/lispeak.pid" ];
+if [ -e "$pidfile" ];
 then
-	PID=$(cat "$pidlocation/lispeak.pid")
-	kill $PID
-	rm "$pidlocation/lispeak.pid"
+	PID=$(cat "$pidfile")
+	kill "$PID"
+	rm "$pidfile"
 fi
