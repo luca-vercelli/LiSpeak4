@@ -30,6 +30,7 @@ mkinstalldirs:
 	mkdir -p $(DESTDIR)$(mandir)/man1
 	mkdir -p $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/
 	mkdir -p $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/
+	mkdir -p $(DESTDIR)$(datarootdir)/lispeak
 
 install: mkinstalldirs
 	cp $(EXECUTABLE) $(DESTDIR)$(bindir)
@@ -37,8 +38,10 @@ install: mkinstalldirs
 	gzip $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1
 	cp lidic.lang $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/
 	cp lidic.lang $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/
+	cp -r modes $(DESTDIR)$(datarootdir)/lispeak/
 
 uninstall:
+	rm -rf $(DESTDIR)$(datarootdir)/modes
 	rm -rf $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/lidic.lang
 	rm -rf $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/lidic.lang
 	rm -rf $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1.gz
