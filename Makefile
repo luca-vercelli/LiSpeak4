@@ -1,4 +1,4 @@
-DIRS=settings dictionary 
+DIRS=settings dictionary speech2text
 
 all:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ ); done
