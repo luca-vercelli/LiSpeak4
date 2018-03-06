@@ -15,20 +15,21 @@ import edu.cmu.sphinx.api.StreamSpeechRecognizer;
  */
 public class App {
 
+	// FIXME
 	public final static String LANG_DEFAULT = "it-IT";
 
 	public static void main(String[] args) throws Exception {
 
 		Configuration configuration = getConfiguration(LANG_DEFAULT);
 
-		//TODO some kind of notification to user???
-		
+		// TODO some kind of notification to user???
+
 		microphoneToStream(configuration, System.out);
 	}
 
 	/**
 	 * Create a configuration object, assuming all models are under
-	 * /speech_recognition/pocketsphinx-data/&lt;lang&gt;
+	 * /speech_recognition/data/&lt;lang&gt;
 	 * 
 	 * @param lang
 	 *            e.g. it-IT
@@ -40,12 +41,12 @@ public class App {
 		// configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
 		// configuration.setDictionaryPath("resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
 		// configuration.setLanguageModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
+		configuration.setAcousticModelPath("resource:/speech_recognition/data/" + lang + "/acoustic-model");
 		configuration
-				.setAcousticModelPath("resource:/speech_recognition/pocketsphinx-data/" + lang + "/acoustic-model");
-		configuration.setDictionaryPath(
-				"resource:/speech_recognition/pocketsphinx-data/" + lang + "/pronounciation-dictionary.dict");
-		configuration.setLanguageModelPath(
-				"resource:/speech_recognition/pocketsphinx-data/" + lang + "/language-model.lm"); //.lm.bin for binay
+				.setDictionaryPath("resource:/speech_recognition/data/" + lang + "/pronounciation-dictionary.dict");
+		configuration.setLanguageModelPath("resource:/speech_recognition/data/" + lang + "/language-model.lm"); // .lm.bin
+																												// for
+																												// binay
 
 		return configuration;
 	}
@@ -67,8 +68,8 @@ public class App {
 		while ((result = recognizer.getResult()) != null) {
 			os.format("Hypothesis: %s\n", result.getHypothesis());
 			os.format("Nbest: %s\n", result.getNbest(6));
-			//os.format("Words: %s\n", result.getWords());
-			//os.format("Lattica: %s\n", result.getLattice().getNodes());
+			// os.format("Words: %s\n", result.getWords());
+			// os.format("Lattica: %s\n", result.getLattice().getNodes());
 		}
 		// Pause recognition process. It can be resumed then with
 		// startRecognition(false).
