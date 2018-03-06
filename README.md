@@ -21,7 +21,7 @@ Uninstall with
 
     sudo make uninstall
 
-or
+or, if installed in user's folder:
 
-    make install prefix=~/.local exec_prefix=~
+    make uninstall prefix=~/.local exec_prefix=~
 
