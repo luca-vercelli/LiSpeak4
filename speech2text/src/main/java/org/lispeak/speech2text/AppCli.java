@@ -1,8 +1,22 @@
 package org.lispeak.speech2text;
 
+import java.awt.SystemTray;
+import java.awt.PopupMenu;
+import java.awt.TrayIcon;
+import java.awt.MenuItem;
+import java.awt.Menu;
+import java.awt.Image;
+import java.awt.TrayIcon.MessageType;
+import java.awt.CheckboxMenuItem;
+import java.awt.AWTException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+
+import java.net.URL;
+
+import javax.swing.ImageIcon;
 
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;
@@ -13,20 +27,26 @@ import edu.cmu.sphinx.api.StreamSpeechRecognizer;
  * @see https://cmusphinx.github.io/wiki/tutorialsphinx4/#using-sphinx4-in-your-projects
  *
  */
-public class App {
+public class AppCli {
 
-	// FIXME
 	public final static String LANG_DEFAULT = "it-IT";
-
+	
 	public static void main(String[] args) throws Exception {
 
-		Configuration configuration = getConfiguration(LANG_DEFAULT);
-
 		// TODO some kind of notification to user???
+		// TODO how to handle languages?
+		// TODO how to trap signals?
+		
+		new AppCli();
+		
+	}
+
+	public AppCli() throws IOException {
+		Configuration configuration = getConfiguration(LANG_DEFAULT);
 
 		microphoneToStream(configuration, System.out);
 	}
-
+	
 	/**
 	 * Create a configuration object, assuming all models are under
 	 * /speech_recognition/data/&lt;lang&gt;
@@ -35,7 +55,7 @@ public class App {
 	 *            e.g. it-IT
 	 * @return
 	 */
-	public static Configuration getConfiguration(String lang) {
+	public Configuration getConfiguration(String lang) {
 		Configuration configuration = new Configuration();
 
 		// configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
@@ -58,13 +78,13 @@ public class App {
 	 * @param os
 	 * @throws IOException
 	 */
-	public static void microphoneToStream(Configuration configuration, PrintStream os) throws IOException {
+	public void microphoneToStream(Configuration configuration, PrintStream os) throws IOException {
 
 		LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
 		// Start recognition process pruning previously cached data.
 		recognizer.startRecognition(true);
 		SpeechResult result;
-		System.out.println("Ready.");
+		System.err.println("Ready.");
 		while ((result = recognizer.getResult()) != null) {
 			os.format("Hypothesis: %s\n", result.getHypothesis());
 			os.format("Nbest: %s\n", result.getNbest(6));
@@ -84,7 +104,7 @@ public class App {
 	 * @param os
 	 * @throws IOException
 	 */
-	public static void streamToStream(Configuration configuration, InputStream is, PrintStream os) throws IOException {
+	public void streamToStream(Configuration configuration, InputStream is, PrintStream os) throws IOException {
 
 		StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration);
 		// Start recognition process pruning previously cached data.
@@ -97,4 +117,5 @@ public class App {
 		// startRecognition(false).
 		recognizer.stopRecognition();
 	}
+
 }
