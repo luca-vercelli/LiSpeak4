@@ -1,27 +1,18 @@
 package org.lispeak.speech2text;
 
-import java.awt.SystemTray;
-import java.awt.PopupMenu;
-import java.awt.TrayIcon;
-import java.awt.MenuItem;
-import java.awt.Menu;
-import java.awt.Image;
-import java.awt.TrayIcon.MessageType;
-import java.awt.CheckboxMenuItem;
 import java.awt.AWTException;
-
+import java.awt.CheckboxMenuItem;
+import java.awt.Image;
+import java.awt.Menu;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.awt.TrayIcon.MessageType;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-
 import java.net.URL;
 
 import javax.swing.ImageIcon;
-
-import edu.cmu.sphinx.api.Configuration;
-import edu.cmu.sphinx.api.LiveSpeechRecognizer;
-import edu.cmu.sphinx.api.SpeechResult;
-import edu.cmu.sphinx.api.StreamSpeechRecognizer;
 
 /**
  * @see https://cmusphinx.github.io/wiki/tutorialsphinx4/#using-sphinx4-in-your-projects
