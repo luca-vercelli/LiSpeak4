@@ -35,7 +35,7 @@
 			</plugin>
 		</plugins>
 	</build>
-  
+
 	<dependencies>
 		<dependency>
 			<groupId>edu.cmu.sphinx</groupId>
@@ -47,5 +47,12 @@
 			<artifactId>sphinx4-data</artifactId>
 			<version>5prealpha-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.ini4j</groupId>
+			<artifactId>ini4j</artifactId>
+			<version>0.5.4</version>
+		</dependency>
+
 	</dependencies>
 </project>
