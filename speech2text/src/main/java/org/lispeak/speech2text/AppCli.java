@@ -3,11 +3,14 @@ package org.lispeak.speech2text;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.ini4j.Ini;
 import org.ini4j.IniPreferences;
 import org.ini4j.InvalidFileFormatException;
+
+import com.sampullara.cli.Args;
 
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;
@@ -17,23 +20,51 @@ import edu.cmu.sphinx.api.SpeechResult;
  * @see https://cmusphinx.github.io/wiki/tutorialsphinx4/#using-sphinx4-in-your-projects
  *
  */
-public class AppCli extends LiveSpeechRecognizer {
+public class AppCli {
 
 	public final static String CONFIG_FILE = System.getProperty("user.home") + File.separator + ".lispeak";
 	public final static String CONFIG_SECTION1 = "General";
-	public final static String LANG_DEFAULT = "it-IT"; // should be en-EN...
+	public final static String LANG_DEFAULT = "it"; // should be en...
+	public final static String VERSION = "0.1";
+
+	CliArguments options;
+	LiveSpeechRecognizer recognizer;
+	String lang;
 
 	public static void main(String[] args) throws Exception {
 
-		// TODO some kind of notification to user???
-		// TODO how to handle languages?
-		// TODO how to trap signals?
+		CliArguments options = new CliArguments();
+		List<String> arguments = Args.parseOrExit(options, args);
+
+		if (options.version) {
+			System.err.println("Version " + VERSION);
+			return;
+		}
+
+		if (options.help) {
+			Args.usage(CliArguments.class);
+			return;
+		}
+
+		if (arguments.size() > 0) {
+			System.err.println("Unexpected arguments");
+			Args.usage(CliArguments.class);
+			System.exit(1);
+		}
+
 		AppCli app = new AppCli();
+		app.options = options;
+
+		// TODO some kind of notification to user???
+		// TODO how to trap signals?
+
 		app.mainLoop(System.out);
 	}
 
 	public AppCli() throws IOException {
-		super(getConfiguration(getLanguage()));
+		this.lang = getLanguage();
+		Configuration configuration = getConfiguration(lang);
+		this.recognizer = new LiveSpeechRecognizer(configuration);
 	}
 
 	/**
@@ -44,7 +75,7 @@ public class AppCli extends LiveSpeechRecognizer {
 	 *            e.g. it-IT
 	 * @return
 	 */
-	public static Configuration getConfiguration(String lang) {
+	public Configuration getConfiguration(String lang) {
 		Configuration configuration = new Configuration();
 
 		// configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
@@ -53,9 +84,8 @@ public class AppCli extends LiveSpeechRecognizer {
 		configuration.setAcousticModelPath("resource:/speech_recognition/data/" + lang + "/acoustic-model");
 		configuration
 				.setDictionaryPath("resource:/speech_recognition/data/" + lang + "/pronounciation-dictionary.dict");
-		configuration.setLanguageModelPath("resource:/speech_recognition/data/" + lang + "/language-model.lm"); // .lm.bin
-																												// for
-																												// binay
+		configuration.setLanguageModelPath("resource:/speech_recognition/data/" + lang + "/language-model.lm");
+		// .lm.bin for binay
 
 		return configuration;
 	}
@@ -70,25 +100,40 @@ public class AppCli extends LiveSpeechRecognizer {
 	public void mainLoop(PrintStream os) throws IOException {
 
 		// Start recognition process pruning previously cached data.
-		startRecognition(true);
+		recognizer.startRecognition(true);
 		SpeechResult result;
 		System.err.println("Ready.");
-		while ((result = getResult()) != null) {
-			os.format("Hypothesis: %s\n", result.getHypothesis());
-			os.format("Nbest: %s\n", result.getNbest(6));
+		while ((result = recognizer.getResult()) != null) {
+			System.out.format("Hypothesis: %s\n", result.getHypothesis());
+			System.err.format("Nbest: %s\n", result.getNbest(6));
 			// os.format("Words: %s\n", result.getWords());
 			// os.format("Lattica: %s\n", result.getLattice().getNodes());
 		}
 		// Pause recognition process. It can be resumed then with
 		// startRecognition(false).
-		stopRecognition();
+		recognizer.stopRecognition();
+	}
+
+	/**
+	 * Temporarily stop recognition.
+	 */
+	public void stopRecognition() {
+		recognizer.stopRecognition();
+	}
+
+	/**
+	 * Resume recognition, after stopped.
+	 */
+	public void startRecognition() {
+		recognizer.startRecognition(false);
 	}
 
 	/**
 	 * Read language from configuration file
+	 * 
 	 * @return
 	 */
-	public static String getLanguage() {
+	public String getLanguage() {
 		Preferences fileini = null;
 		try {
 			fileini = getIniFile();
@@ -103,6 +148,7 @@ public class AppCli extends LiveSpeechRecognizer {
 
 	/**
 	 * Read the whole configuration file.
+	 * 
 	 * @return
 	 * @throws InvalidFileFormatException
 	 * @throws IOException
