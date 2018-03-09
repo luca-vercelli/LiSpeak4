@@ -6,15 +6,16 @@ import gettext
 gettext.textdomain('lispeak')
 _ = gettext.gettext
 
+import os
+
 def get_user_home():
     """
     Get user home directory path
     """
-    from os.path import expanduser
-    return expanduser("~")
+    return os.path.expanduser("~")
 
 HOME = get_user_home()
-CONFIG_FILE = HOME + "/.lispeak4"
+CONFIG_FILE = os.path.join(HOME, ".lispeak4")	# This works in either Windows and Linux
 CONFIG_SECTION1 = "General"
 AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"
 GLADE_TEMPLATE_LOCATION=['.', '~/.local/share/lispeak/glade', '/usr/share/lispeak/glade']
@@ -24,9 +25,8 @@ def get_glade_folder():
     Return the folder where you we can find 
     Glade templates and images
     """
-    import os
     for path in GLADE_TEMPLATE_LOCATION:
-        if os.path.isfile(path + "/settings.glade"):
+        if os.path.isfile(os.path.join(path, "settings.glade")):
             return path
     
 def load_user_info():
