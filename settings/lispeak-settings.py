@@ -8,17 +8,11 @@ _ = gettext.gettext
 
 import os
 
-def get_user_home():
-    """
-    Get user home directory path
-    """
-    return os.path.expanduser("~")
-
-HOME = get_user_home()
+HOME = os.path.expanduser("~")					# This works in either Windows and Linux
 CONFIG_FILE = os.path.join(HOME, ".lispeak4")	# This works in either Windows and Linux
 CONFIG_SECTION1 = "General"
-AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"
-GLADE_TEMPLATE_LOCATION=['.', '~/.local/share/lispeak/glade', '/usr/share/lispeak/glade']
+AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"	# Autostart feature is Linux specific
+GLADE_TEMPLATE_LOCATION=['.', '~/.local/share/lispeak/glade', '/usr/share/lispeak/glade']	# "." works in Windows, too.
 
 def get_glade_folder():
     """
