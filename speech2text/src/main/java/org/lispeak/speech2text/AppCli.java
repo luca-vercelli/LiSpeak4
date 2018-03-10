@@ -105,7 +105,7 @@ public class AppCli {
 		SpeechResult result;
 		System.err.println("Ready.");
 		while ((result = recognizer.getResult()) != null) {
-			System.out.format("Hypothesis: %s\n", result.getHypothesis());
+			System.out.println(result.getHypothesis());
 			System.err.format("Nbest: %s\n", result.getNbest(6));
 			// os.format("Words: %s\n", result.getWords());
 			// os.format("Lattica: %s\n", result.getLattice().getNodes());
