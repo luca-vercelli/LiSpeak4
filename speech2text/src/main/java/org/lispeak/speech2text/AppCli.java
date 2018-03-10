@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.prefs.Preferences;
 
 import org.ini4j.Ini;
@@ -22,7 +23,7 @@ import edu.cmu.sphinx.api.SpeechResult;
  */
 public class AppCli {
 
-	public final static String CONFIG_FILE = System.getProperty("user.home") + File.separator + ".lispeak4"; // This works in Windows, too
+	public final static String CONFIG_FILE = System.getProperty("user.home") + File.separator + ".lispeak4";
 	public final static String CONFIG_SECTION1 = "General";
 	public final static String LANG_DEFAULT = Locale.getDefault().getLanguage();
 	public final static String VERSION = "0.1";
