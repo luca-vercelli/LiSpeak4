@@ -7,7 +7,6 @@ import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class AppGui extends AppCli {
 		// TODO how to trap signals?
 
 		AppGui app = new AppGui();
-		app.mainLoop(System.out);
+		app.mainLoop();
 
 	}
 

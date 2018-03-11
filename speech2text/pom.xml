@@ -28,7 +28,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>org.lispeak.speech2text.AppGui</mainClass>
+							<mainClass>org.lispeak.speech2text.AppCli</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -2,7 +2,6 @@ package org.lispeak.speech2text;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.prefs.Preferences;
@@ -16,8 +15,12 @@ import com.sampullara.cli.Args;
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;
 import edu.cmu.sphinx.api.SpeechResult;
+import edu.cmu.sphinx.api.StreamSpeechRecognizer;
 
 /**
+ * Recognized speech is sent to Standard Output. All other messages to Standard
+ * Error.
+ * 
  * @see https://cmusphinx.github.io/wiki/tutorialsphinx4/#using-sphinx4-in-your-projects
  *
  */
@@ -29,8 +32,8 @@ public class AppCli {
 	public final static String VERSION = "0.1";
 
 	CliArguments options;
-	LiveSpeechRecognizer recognizer;
-	String lang;
+	LiveSpeechRecognizer micRecognizer;
+	StreamSpeechRecognizer streamRecognizer;
 
 	public static void main(String[] args) throws Exception {
 
@@ -59,52 +62,66 @@ public class AppCli {
 		// TODO some kind of notification to user???
 		// TODO how to trap signals?
 
-		app.mainLoop(System.out);
+		app.mainLoop();
 	}
 
 	public AppCli() throws IOException {
-		this.lang = getLanguage();
-		Configuration configuration = getConfiguration(lang);
-		this.recognizer = new LiveSpeechRecognizer(configuration);
+
+		if (options.lang == null)
+			options.lang = getLanguage();
+		Configuration configuration = getConfiguration();
+
+		if (options.stdin)
+			this.streamRecognizer = new StreamSpeechRecognizer(configuration);
+		else
+			this.micRecognizer = new LiveSpeechRecognizer(configuration);
 	}
 
 	/**
-	 * Create a configuration object, assuming all models are under
-	 * /speech_recognition/data/&lt;lang&gt;
+	 * Create a configuration object from options
 	 * 
-	 * @param lang
-	 *            e.g. it-IT
 	 * @return
 	 */
-	public Configuration getConfiguration(String lang) {
+	public Configuration getConfiguration() {
 		Configuration configuration = new Configuration();
 
-		// configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
-		// configuration.setDictionaryPath("resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
-		// configuration.setLanguageModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
-		configuration.setAcousticModelPath("resource:/speech_recognition/data/" + lang + "/acoustic-model");
-		configuration
-				.setDictionaryPath("resource:/speech_recognition/data/" + lang + "/pronounciation-dictionary.dict");
-		configuration.setLanguageModelPath("resource:/speech_recognition/data/" + lang + "/language-model.lm");
-		// .lm.bin for binay
+		if (options.acousticmodel == null)
+			options.acousticmodel = "resource:/speech_recognition/data/" + options.lang + "/acoustic-model";
+		if (options.dictionary == null)
+			options.dictionary = "resource:/speech_recognition/data/" + options.lang
+					+ "/pronounciation-dictionary.dict";
+		if (options.languagemodel == null)
+			options.languagemodel = "resource:/speech_recognition/data/" + options.lang + "/language-model.lm";
+
+		configuration.setAcousticModelPath(options.acousticmodel);
+		configuration.setDictionaryPath(options.dictionary);
+		configuration.setLanguageModelPath(options.languagemodel);
 
 		return configuration;
 	}
 
+	public void mainLoop() throws IOException {
+
+		if (options.stdin)
+			mainLoopMic();
+		else
+			mainLoopStream();
+	}
+
 	/**
-	 * Read data from microphone, print text to output stream
+	 * Read data from microphone, print text to stdout
 	 * 
 	 * @param configuration
 	 * @param os
 	 * @throws IOException
 	 */
-	public void mainLoop(PrintStream os) throws IOException {
+	protected void mainLoopMic() throws IOException {
 
 		// Start recognition process pruning previously cached data.
-		recognizer.startRecognition(true);
+		micRecognizer.startRecognition(true);
 		SpeechResult result;
 		System.err.println("Ready.");
-		while ((result = recognizer.getResult()) != null) {
+		while ((result = micRecognizer.getResult()) != null) {
 			System.out.println(result.getHypothesis());
 			System.err.format("Nbest: %s\n", result.getNbest(6));
 			// os.format("Words: %s\n", result.getWords());
@@ -112,21 +129,30 @@ public class AppCli {
 		}
 		// Pause recognition process. It can be resumed then with
 		// startRecognition(false).
-		recognizer.stopRecognition();
+		micRecognizer.stopRecognition();
 	}
 
 	/**
-	 * Temporarily stop recognition.
+	 * Read data from stdin, print text to stdout
+	 * 
+	 * @param configuration
+	 * @param os
+	 * @throws IOException
 	 */
-	public void stopRecognition() {
-		recognizer.stopRecognition();
-	}
+	protected void mainLoopStream() throws IOException {
 
-	/**
-	 * Resume recognition, after stopped.
-	 */
-	public void startRecognition() {
-		recognizer.startRecognition(false);
+		streamRecognizer.startRecognition(System.in);
+		SpeechResult result;
+		System.err.println("Ready.");
+		while ((result = streamRecognizer.getResult()) != null) {
+			System.out.println(result.getHypothesis());
+			System.err.format("Nbest: %s\n", result.getNbest(6));
+			// os.format("Words: %s\n", result.getWords());
+			// os.format("Lattica: %s\n", result.getLattice().getNodes());
+		}
+		// Pause recognition process. It can be resumed then with
+		// startRecognition(false).
+		streamRecognizer.stopRecognition();
 	}
 
 	/**
