@@ -27,12 +27,10 @@ install: mkinstalldirs
 	#in Debian, use mh instead
 	install -m 775 target/$(JARNAME) $(DESTDIR)$(datarootdir)/java
 	ln -s $(DESTDIR)$(datarootdir)/java/$(JARNAME) $(DESTDIR)$(datarootdir)/java/$(JARLINK)
-	install -m 775 src/main/sh/lispeak-start.sh $(DESTDIR)$(bindir)/lispeak-start
-	install -m 775 src/main/sh/lispeak-start.sh $(DESTDIR)$(bindir)/lispeak-stop
+	install -m 775 src/main/sh/speech2text.sh $(DESTDIR)$(bindir)/speech2text
 
 uninstall:
-	rm -rf $(DESTDIR)$(bindir)/lispeak-start
-	rm -rf $(DESTDIR)$(bindir)/lispeak-stop
+	rm -rf $(DESTDIR)$(bindir)/speech2text
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARLINK)
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARNAME)
 
