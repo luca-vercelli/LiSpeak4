@@ -29,10 +29,21 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<mainClass>org.lispeak.speech2text.AppCli</mainClass>
+							<!-- warning, this is useless unless we package dependencies -->
 						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
+			
+			<!-- The folowing allows to run the program using mvn exec:java -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>org.lispeak.speech2text.AppCli</mainClass>
+				</configuration>
+        </plugin>
 		</plugins>
 	</build>
 
