@@ -10,8 +10,13 @@
 ### END INIT INFO
 
 #FIXME paths should be set up by make ?!?
-DAEMON=/usr/local/share/java/speech2text.jar
+JAVADIR=/usr/local/share/java
+DAEMON=$JAVADIR/speech2text.jar
 PIDFILE=/var/run/speech2text.pid
+
+CLASSPATH=$CLASSPATH:$JAVADIR/sphinx4-core-5prealpha-SNAPSHOT.jar
+CLASSPATH=$CLASSPATH:$JAVADIR/ini4j-0.5.4.jar
+CLASSPATH=$CLASSPATH:$JAVADIR/cli-parser-1.1.2.jar
 
 test -x $DAEMON || exit 5
 
