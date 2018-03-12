@@ -11,8 +11,11 @@ import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+
+import com.sampullara.cli.Args;
 
 /**
  * @see https://cmusphinx.github.io/wiki/tutorialsphinx4/#using-sphinx4-in-your-projects
@@ -30,13 +33,32 @@ public class AppGui extends AppCli {
 		// TODO how to handle languages?
 		// TODO how to trap signals?
 
-		AppGui app = new AppGui();
+		CliArguments options = new CliArguments();
+		List<String> arguments = Args.parseOrExit(options, args);
+
+		if (options.version) {
+			System.err.println("Version " + VERSION);
+			return;
+		}
+
+		if (options.help) {
+			Args.usage(CliArguments.class);
+			return;
+		}
+
+		if (arguments.size() > 0) {
+			System.err.println("Unexpected arguments");
+			Args.usage(CliArguments.class);
+			System.exit(1);
+		}
+
+		AppGui app = new AppGui(options);
 		app.mainLoop();
 
 	}
 
-	public AppGui() throws IOException {
-		// recognition already started here
+	public AppGui(CliArguments options) throws IOException {
+		super(options);
 		showIconInSystemTray();
 	}
 

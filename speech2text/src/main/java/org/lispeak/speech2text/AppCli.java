@@ -56,8 +56,7 @@ public class AppCli {
 			System.exit(1);
 		}
 
-		AppCli app = new AppCli();
-		app.options = options;
+		AppCli app = new AppCli(options);
 
 		// TODO some kind of notification to user???
 		// TODO how to trap signals?
@@ -65,13 +64,14 @@ public class AppCli {
 		app.mainLoop();
 	}
 
-	public AppCli() throws IOException {
-
-		if (options.lang == null)
-			options.lang = getLanguage();
+	public AppCli(CliArguments options) throws IOException {
+		this.options = options;
+		
+		if (this.options.lang == null)
+			this.options.lang = getLanguage();
 		Configuration configuration = getConfiguration();
 
-		if (options.stdin)
+		if (this.options.stdin)
 			this.streamRecognizer = new StreamSpeechRecognizer(configuration);
 		else
 			this.micRecognizer = new LiveSpeechRecognizer(configuration);
@@ -103,9 +103,9 @@ public class AppCli {
 	public void mainLoop() throws IOException {
 
 		if (options.stdin)
-			mainLoopMic();
-		else
 			mainLoopStream();
+		else
+			mainLoopMic();
 	}
 
 	/**
