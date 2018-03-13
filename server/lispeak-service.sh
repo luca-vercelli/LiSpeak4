@@ -23,7 +23,7 @@ case $1 in
             exit 1
         fi
 
-		#FIXME Debian services have many more features, e.g. UID and logfile
+		#TODO Debian services have many more features, e.g. UID and logfile
         $DAEMON &
 
         echo $! > $PIDFILE
@@ -37,7 +37,7 @@ case $1 in
         fi
   		;;
 	restart|reload|force-reload)
-		$0 stop && sleep 2 && $0 start
+		$0 stop && sleep 1 && $0 start
   		;;
 	status)
         if [ -e "$PIDFILE" ];
