@@ -9,6 +9,6 @@ CLASSPATH=$CLASSPATH:$JAVADIR/ini4j-0.5.4.jar
 CLASSPATH=$CLASSPATH:$JAVADIR/cli-parser-1.1.2.jar
 
 
-java -cp "$CLASSPATH" org.lispeak.speech2text.AppCli &
+java -cp "$CLASSPATH" org.lispeak.speech2text.AppCli
 
 
