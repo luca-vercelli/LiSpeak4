@@ -9,6 +9,8 @@ sysconfdir=$(prefix)/etc
 mandir=$(datarootdir)/man
 DESTDIR=
 
+M2REPO=~/.m2/repository
+
 JARNAME=speech2text-0.1.jar
 JARLINK=speech2text.jar
 
@@ -24,15 +26,26 @@ mkinstalldirs:
 	mkdir -p $(DESTDIR)$(datarootdir)/java
 
 install: mkinstalldirs
+	#
 	#in Debian, use mh instead
+	#
 	install -m 775 target/$(JARNAME) $(DESTDIR)$(datarootdir)/java
-	ln -s $(DESTDIR)$(datarootdir)/java/$(JARNAME) $(DESTDIR)$(datarootdir)/java/$(JARLINK)
+	ln -sf $(DESTDIR)$(datarootdir)/java/$(JARNAME) $(DESTDIR)$(datarootdir)/java/$(JARLINK)
+	#Dependencies
+	install -m 775 $(M2REPO)/edu/cmu/sphinx/sphinx4-core/5prealpha-SNAPSHOT/sphinx4-core-5prealpha-SNAPSHOT.jar $(DESTDIR)$(datarootdir)/java
+	ln -sf $(DESTDIR)$(datarootdir)/java/sphinx4-core-5prealpha-SNAPSHOT.jar $(DESTDIR)$(datarootdir)/java/sphinx4-core-5prealpha.jar
+	install -m 775 $(M2REPO)/org/ini4j/ini4j/0.5.4/ini4j-0.5.4.jar $(DESTDIR)$(datarootdir)/java
+	ln -sf $(DESTDIR)$(datarootdir)/java/ini4j-0.5.4.jar $(DESTDIR)$(datarootdir)/java/ini4j.jar
+	install -m 775 $(M2REPO)/com/github/spullara/cli-parser/cli-parser/1.1.2/cli-parser-1.1.2.jar $(DESTDIR)$(datarootdir)/java
+	ln -sf $(DESTDIR)$(datarootdir)/java/cli-parser-1.1.2.jar $(DESTDIR)$(datarootdir)/java/cli-parser.jar
+	#Run script
 	install -m 775 src/main/sh/speech2text.sh $(DESTDIR)$(bindir)/speech2text
 
 uninstall:
 	rm -rf $(DESTDIR)$(bindir)/speech2text
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARLINK)
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARNAME)
+    #We do not remove dependencies... Very Windows-style...
 
 clean:
 	mvn clean

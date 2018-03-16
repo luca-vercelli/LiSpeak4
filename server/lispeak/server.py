@@ -21,9 +21,9 @@ def start_speech2text_service():
     global userinfo, speech2text_pid
     if speech2text_pid is not None:
         print "Something's wrong. speech2text_pid = ", speech2text_pid
-        return
+        raise Error
     import subprocess
-    p = subprocess.Popen([SPEECH2TEXT, "-l", userinfo.lang], stdout=PIPE)
+    p = subprocess.Popen([SPEECH2TEXT, "-l", userinfo['lang']], stdout=subprocess.PIPE)
     speech2text_pid = p.pid
     return p.stdout, p.stderr
 
@@ -43,7 +43,10 @@ def run_dictionary(text_line):
     """
     global userinfo
     import subprocess, os
-    dic_file = os.path.join([DICT_PREFIX, userinfo.lang, get_current_mode(), ".dic"])
+    
+    print "Running dictionary for:", text_line
+    
+    dic_file = os.path.join([DICT_PREFIX, userinfo['lang'], get_current_mode(), ".dic"])
     return subprocess.check_output([DICTIONARY, text_line, dic_file])
 
 def execute_final_command(command):
@@ -55,7 +58,7 @@ def execute_final_command(command):
     return subprocess.check_output(command)
 
 def start():
-    global running
+    global running, userinfo
     if running:
         print "LiSpeak server already running"
         return
@@ -65,12 +68,13 @@ def start():
     set_current_mode()
     
     userinfo = load_user_info()
-    
-    while true:
-        out, err = start_speech2text()
+    print "UserInfo:", userinfo
+
+    while True:
+        out, err = start_speech2text_service()
         
-        while out is not None:
-            command = run_dictionary(otu)
+        for line in out:
+            command = run_dictionary(line)
             execute_final_command(command)
             
             # Has the final command modified current mode?
@@ -81,4 +85,4 @@ def start():
                 start_speech2text_service()
                 
 
-	
+

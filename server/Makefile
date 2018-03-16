@@ -8,7 +8,7 @@ datadir=$(datarootdir)
 sysconfdir=$(prefix)/etc
 mandir=$(datarootdir)/man
 libdir=$(exec_prefix)/lib
-localstatedir=$(prefix)/var
+localstatedir=/var
 runstatedir=$(localstatedir)/run
 servicedir=/etc/init.d
 DESTDIR=
@@ -28,7 +28,7 @@ mkinstalldirs:
 	mkdir -p $(DESTDIR)$(datarootdir)/lispeak
 	mkdir -p $(DESTDIR)$(libdir)/python2.7
 	mkdir -p $(DESTDIR)$(runstatedir)/lispeak
-	chmod 775 $(DESTDIR)$(runstatedir)/lispeak
+	chmod 777 $(DESTDIR)$(runstatedir)/lispeak
 	mkdir -p $(DESTDIR)$(servicedir)
 
 install: mkinstalldirs

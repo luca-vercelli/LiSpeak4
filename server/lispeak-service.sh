@@ -9,8 +9,8 @@
 # Short-Description: Start NTP daemon
 ### END INIT INFO
 
-#FIXME paths should be set up by make ?!?
-DAEMON=/usr/local/bin/lispeak-server
+#FIXME paths shouldn't be set up by make ?!?
+DAEMON=/usr/local/bin/lispeak
 PIDFILE=/var/run/lispeak/lispeak.pid
 
 

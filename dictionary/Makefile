@@ -35,7 +35,7 @@ mkinstalldirs:
 install: mkinstalldirs
 	cp $(EXECUTABLE) $(DESTDIR)$(bindir)
 	cp manpages/$(EXECUTABLE) $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1
-	gzip $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1
+	gzip -f $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1
 	cp lidic.lang $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/
 	cp lidic.lang $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/
 	cp -r modes $(DESTDIR)$(datarootdir)/lispeak/
