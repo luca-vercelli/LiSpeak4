@@ -10,10 +10,12 @@ mandir=$(datarootdir)/man
 libdir=$(exec_prefix)/lib
 localstatedir=$(prefix)/var
 runstatedir=$(localstatedir)/run
+servicedir=/etc/init.d
 DESTDIR=
 
 #if user is not root, should run with: 
 #make install prefix=~/.local exec_prefix=~
+#However not everything will work
 
 all:
 	./setup.py build
@@ -27,15 +29,17 @@ mkinstalldirs:
 	mkdir -p $(DESTDIR)$(libdir)/python2.7
 	mkdir -p $(DESTDIR)$(runstatedir)/lispeak
 	chmod 775 $(DESTDIR)$(runstatedir)/lispeak
+	mkdir -p $(DESTDIR)$(servicedir)
 
 install: mkinstalldirs
-	./setup.py install
-	#defaults to /usr/local/lib/python2.7/dist-packages/
-	cp lispeak-server.py $(DESTDIR)$(bindir)/lispeak-server
-	cp lispeak-service.sh $(DESTDIR)$(bindir)/etc/init.d
-	cp -r lispeak $(DESTDIR)$(libdir)/python2.7
+	./setup.py install --prefix=$(prefix)
+	#defaults to $(prefix)/lib/python2.7/dist-packages/ or site-packages 
+	install -m=755 lispeak-server.py $(DESTDIR)$(bindir)/lispeak
+	install -m=755 lispeak-service.sh $(DESTDIR)$(servicedir)/lispeak 
 
 uninstall:
-	rm -rf $(DESTDIR)$(bindir)/lispeak-server
-	rm -rf $(DESTDIR)$(libdir)/python2.7/lispeak
+	rm -rf $(DESTDIR)$(bindir)/lispeak
+	rm -rf $(DESTDIR)$(prefix)/lib/python2.7/site-packages/lispeak
+	rm -rf $(DESTDIR)$(prefix)/lib/python2.7/dist-packages/lispeak
+	rm -rf $(DESTDIR)$(servicedir)/lispeak
 

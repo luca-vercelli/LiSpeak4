@@ -3,6 +3,10 @@
 
 from lispeak.common import *
 
+import gettext
+gettext.textdomain('lispeak')
+_ = gettext.gettext
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description=_('LiSpeak - Linux Voice Command And Control System - Settings panel'))

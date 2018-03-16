@@ -2,54 +2,13 @@
 # -*- coding: utf-8 -*- 
 VERSION = 0.1
 
+# Require lispeak module
+
+from lispeak.common import *
+
 import gettext
 gettext.textdomain('lispeak')
 _ = gettext.gettext
-
-import os
-
-HOME = os.path.expanduser("~")					# This works in either Windows and Linux
-CONFIG_FILE = os.path.join(HOME, ".lispeak4")	# This works in either Windows and Linux
-CONFIG_SECTION1 = "General"
-AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"	# Autostart feature is Linux specific
-GLADE_TEMPLATE_LOCATION=['.', '~/.local/share/lispeak/glade', '/usr/share/lispeak/glade']	# "." works in Windows, too.
-
-def get_glade_folder():
-    """
-    Return the folder where you we can find 
-    Glade templates and images
-    """
-    for path in GLADE_TEMPLATE_LOCATION:
-        if os.path.isfile(os.path.join(path, "settings.glade")):
-            return path
-    
-def load_user_info():
-    """
-    Load user info from configuration file
-    @return dict
-    """
-    import ConfigParser
-    defaults = {
-        "autostart" : "False"
-        }
-    config = ConfigParser.ConfigParser(defaults)
-    try:
-        config.read(CONFIG_FILE)
-        return dict(config.items(CONFIG_SECTION1))
-    except:
-        return defaults
-
-def save_user_info(user_info_dict):
-    """
-    Write user info to configuration file
-    """
-    import ConfigParser
-    config = ConfigParser.RawConfigParser()
-    config.add_section(CONFIG_SECTION1)
-    for key, value in user_info_dict.iteritems():
-        config.set(CONFIG_SECTION1, str(key), str(value))
-    with open(CONFIG_FILE, 'wb') as configfile:
-        config.write(configfile)
 
 class SettingsWindow:
     def __init__(self):

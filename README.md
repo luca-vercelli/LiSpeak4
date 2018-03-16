@@ -13,18 +13,8 @@ Install as root:
     sudo make install
     lispeak-settings
 
-Install in user's folder:
-
-	(first, install all dependencies as root...)
-    make
-    make install prefix=~/.local exec_prefix=~
-    ~/bin/lispeak-settings
-
 Uninstall with
 
     sudo make uninstall
 
-or, if installed in user's folder:
-
-    make uninstall prefix=~/.local exec_prefix=~
 

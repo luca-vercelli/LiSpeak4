@@ -1,4 +1,9 @@
-DIRS=settings dictionary speech2text
+DIRS=dictionary speech2text server settings
+
+#if user is not root, should run with: 
+#make install prefix=~/.local exec_prefix=~
+#However not everything will work
+
 
 all:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ ); done

@@ -11,6 +11,7 @@ DESTDIR=
 
 #if user is not root, should run with: 
 #make install prefix=~/.local exec_prefix=~
+#However not everything will work
 
 all:
 	#nothing to do
@@ -23,7 +24,7 @@ mkinstalldirs:
 	mkdir -p $(DESTDIR)$(datarootdir)/lispeak/glade
 
 install: mkinstalldirs
-	cp lispeak-settings.py $(DESTDIR)$(bindir)/lispeak-settings
+	install -m=755 lispeak-settings.py $(DESTDIR)$(bindir)/lispeak-settings
 	cp settings.glade $(DESTDIR)$(datarootdir)/lispeak/glade
 	cp mic.png $(DESTDIR)$(datarootdir)/lispeak/glade
 

@@ -8,11 +8,13 @@ _ = gettext.gettext
 
 import os
 
+#FIXME  paths should be set up by make, don't?
+ 
 HOME = os.path.expanduser("~")                    # This works in either Windows and Linux
 CONFIG_FILE = os.path.join(HOME, ".lispeak4")    # This works in either Windows and Linux
 CONFIG_SECTION1 = "General"
 AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"    # Autostart feature is Linux specific
-GLADE_TEMPLATE_LOCATION=['.', '~/.local/share/lispeak/glade', '/usr/share/lispeak/glade']    # "." works in Windows, too.
+GLADE_TEMPLATE_LOCATION=['.', '~/.local/share/lispeak/glade', '/usr/local/share/lispeak/glade', '/usr/share/lispeak/glade']    # "." works in Windows, too.
 MODE_FILE = "/var/run/lispeak/mode"                                # This path is Linux specific...
 DEFAULT_MODE = "main"
 
