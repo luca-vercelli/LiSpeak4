@@ -9,8 +9,7 @@ Parts of code are from LiSpeak/Palaver.
 Install as root:
 
 	(first, install all dependencies...)
-    make
-    sudo make install
+    make && sudo make install
     lispeak-settings
 
 Uninstall with
