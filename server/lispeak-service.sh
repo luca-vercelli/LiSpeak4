@@ -1,5 +1,14 @@
 #!/bin/sh
 
+
+
+# Probably this is useless, LiSpeak cannot be a service, a user must be connected
+
+
+
+
+
+
 ### BEGIN INIT INFO
 # Provides:        ntp
 # Required-Start:  $network $remote_fs $syslog

@@ -11,7 +11,7 @@ DESTDIR=
 
 #if user is not root, should run with: 
 #make install prefix=~/.local exec_prefix=~
-#However not everything will work
+#not sure if everything will work
 
 all:
 	#nothing to do

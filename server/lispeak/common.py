@@ -8,15 +8,27 @@ _ = gettext.gettext
 
 import os
 
-#FIXME  paths should be set up by make, don't?
+try:
+    from make_conf import *
+except:
+    prefix='.'
+    datarootdir='.'
+    bindir='.'
  
 HOME = os.path.expanduser("~")                    # This works in either Windows and Linux
-CONFIG_FILE = os.path.join(HOME, ".lispeak4")    # This works in either Windows and Linux
+CONFIG_DIR = os.path.join(HOME, ".lispeak4")      # os.path.join works in either Windows and Linux
+CONFIG_FILE = os.path.join(HOME, ".lispeak4", "lispeak.conf") 
 CONFIG_SECTION1 = "General"
 AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"    # Autostart feature is Linux specific
-GLADE_TEMPLATE_LOCATION=['.', '~/.local/share/lispeak/glade', '/usr/local/share/lispeak/glade', '/usr/share/lispeak/glade']    # "." works in Windows, too.
-MODE_FILE = "/var/run/lispeak/mode"                                # This path is Linux specific...
+GLADE_TEMPLATE_LOCATION=['.', datarootdir + '/lispeak/glade']
+MODE_FILE = os.path.join(HOME, ".lispeak4", "mode")
 DEFAULT_MODE = "main"
+
+if os.path.exists(CONFIG_DIR) and not os.path.isdir(CONFIG_DIR):
+    os.remove(CONFIG_DIR)
+if not os.path.exists(CONFIG_DIR):
+    os.makedirs(CONFIG_DIR)
+
 
 def get_glade_folder():
     """
@@ -70,7 +82,7 @@ def set_current_mode(mode = DEFAULT_MODE):
     with open(MODE_FILE, 'w') as mode_file:
         mode_file.write(mode)
 
-def enable_autostart(enable=True, path="/usr/bin"):
+def enable_autostart(enable=True):
     """
     Enable/disable autostart at system startup
     @param state: True to enable, False to disable
@@ -85,7 +97,7 @@ Name=LiSpeak
 GenericName=LiSpeak
 Name[en_CA]=LiSpeak
 Comment=LiSpeak is a voice command and control system
-Exec="""+path+"""/lispeak-start
+Exec="""+bindir+"""/lispeak
 Terminal=false
 Type=Application
 Categories=Application;
