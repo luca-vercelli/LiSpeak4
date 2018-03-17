@@ -6,6 +6,10 @@ VERSION = 0.1
 
 from lispeak.common import *
 
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
 import gettext
 gettext.textdomain('lispeak')
 _ = gettext.gettext
@@ -21,19 +25,18 @@ class SettingsWindow:
         self.engines = ["espeak","Google TTS","pico2wave"]
         self.userinfo = load_user_info()
 
-        from gi.repository import Gtk
         self.builder = Gtk.Builder()
         self.builder.add_from_file(glade_folder + "/settings.glade")
         self.builder.connect_signals(self)
 
         self.window = self.builder.get_object("window1")
+        self.aboutDialog = self.builder.get_object("aboutDialog")
         self.addItems(self.builder.get_object("cmbEngine"), self.engines)
-        self.addItems(self.builder.get_object("cmbLang"), self.languages)   #TODO should set self.lang_codes instead
+        self.addItems(self.builder.get_object("cmbLang"), self.languages)
         self.fillFields()
         self.window.show_all()
 
     def onClose(self, *args):
-        from gi.repository import Gtk
         Gtk.main_quit(args)
         #TODO run lispeak? or not?
 
@@ -55,7 +58,14 @@ class SettingsWindow:
         save_user_info(self.userinfo)
 
     def openAbout(self,widget):
-        self.about.show_all()
+        self.aboutDialog.set_transient_for(self.builder.get_object("window1"))
+        #FIXME image is blank
+        response = self.aboutDialog.run()
+        if response == Gtk.ResponseType.DELETE_EVENT or response == Gtk.ResponseType.CANCEL:
+            self.aboutDialog.hide()
+
+    def dialogBtnPressed(self,*args):
+        print args
 
     def set_combo_active_text(self,combo, text):
         model = combo.get_model()
@@ -87,12 +97,9 @@ class SettingsWindow:
 
 
 def open_dialog():
-    import gi 
-    gi.require_version('Gtk', '3.0')
-    from gi.repository import Gtk
     app = SettingsWindow()
     Gtk.main()
-    #FIXME if there is any exception, the Gtk windows close but the program remains alive...
+    #FIXME if there is any exception, the Gtk windows close however the program remains alive...
 
 if __name__ == "__main__":
     import argparse

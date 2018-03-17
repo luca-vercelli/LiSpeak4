@@ -2,18 +2,18 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAboutDialog" id="aboutdialog1">
+  <object class="GtkAboutDialog" id="aboutDialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
+    <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">LiSpeak</property>
-    <property name="comments" translatable="yes">This dialog has some problems. We're working on it.</property>
-    <property name="website">http://lispeak.bmandesigns.com</property>
+    <property name="comments" translatable="yes">Linux Voice Command And Control System</property>
+    <property name="website">https://github.com/luca-vercelli/LiSpeak4</property>
     <property name="authors">Brett Mayson (@BmanDesignsCanada)
-Luca (@luca-vercelli)</property>
-    <property name="translator_credits" translatable="yes">Italian - Luca</property>
-    <property name="logo_icon_name">image-missing</property>
+Luca Vercelli (@luca-vercelli)</property>
+    <property name="logo_icon_name">mic.png</property>
     <property name="license_type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">
