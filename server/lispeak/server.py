@@ -77,10 +77,10 @@ def start():
             command = run_dictionary(line)
             execute_final_command(command)
             
-            # Has the final command modified current mode?
-            oldmode = mode
-            mode = get_current_mode()
-            if mode != oldmode:
+            # Has the final command modified language?
+            oldlang = userinfo.lang
+            userinfo = load_user_info()
+            if oldlang != userinfo['lang']:
                 stop_speech2text_service()
                 start_speech2text_service()
                 
