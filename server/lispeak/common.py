@@ -69,3 +69,29 @@ def set_current_mode(mode = DEFAULT_MODE):
     """
     with open(MODE_FILE, 'w') as mode_file:
         mode_file.write(mode)
+
+def enable_autostart(enable=True, path="/usr/bin"):
+    """
+    Enable/disable autostart at system startup
+    @param state: True to enable, False to disable
+    @path: common values are /usr/bin, /usr/local/bin, ~/bin
+    """
+    if enable:
+        with open(AUTOSTART_FILE,"w") as f:
+            f.write("""
+[Desktop Entry]
+Version="""+str(VERSION)+"""
+Name=LiSpeak
+GenericName=LiSpeak
+Name[en_CA]=LiSpeak
+Comment=LiSpeak is a voice command and control system
+Exec="""+path+"""/lispeak-start
+Terminal=false
+Type=Application
+Categories=Application;
+""")
+    else:
+        import os
+        if os.path.isfile(AUTOSTART_FILE):
+            os.remove(AUTOSTART_FILE)
+
