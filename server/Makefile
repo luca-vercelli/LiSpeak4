@@ -22,6 +22,7 @@ all:
 
 clean:
 	rm -rf build
+	rm -rf lispeak/*.pyc
 
 mkinstalldirs:
 	mkdir -p $(DESTDIR)$(bindir)
