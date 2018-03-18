@@ -1,7 +1,12 @@
 #!/usr/bin/env python2.7
+# -*- coding: utf-8 -*- 
 #
 # Read a word from stdin, print the corresponding line (word + pronounce) to stdout
 # Italian only
+#
+# Usage:
+# cat 7346.vocab | ./guess_pronounce.py > 7346.it.dic
+
 
 FONEMI = [     #order is worth, this is not a dict
     # gn    
@@ -46,6 +51,7 @@ FONEMI = [     #order is worth, this is not a dict
     ( 'h' , [[]]),
     # s,z -> accettiamo 2 pronunce diverse
     ( 'ss' , [['s','s']]),
+    ( 'zz' , [['ts','ts']]),
     ( 's' , [['s'],['z']]),
     ( 'z' , [['ts'],['dz']]),
     # dittonghi
@@ -53,11 +59,24 @@ FONEMI = [     #order is worth, this is not a dict
     ( 'ia' , [['j','a']]),
     ( 'io' , [['j','o']]),
     ( 'iu' , [['j','u']]),
-    #apostrofo    
+    #apostrofo
     ( '\'' , [[]]),
     ]
 
 VOCALI = [ 'a', 'e', 'i', 'o', 'u']
+LETTERE_ACCENTATE = [ 'à', 'á', 'è', 'é', 'ì', 'ì', 'ò', 'ó', 'ù', 'ú']
+LETTERE_ACCENTATE_MAP = {
+     'à' : 'a1',
+     'á' : 'a1',    
+     'è' : 'e1',
+     'é' : 'e1',
+     'ì' : 'i1',
+     'í' : 'i1',
+     'ò' : 'o1',
+     'ó' : 'o1',
+     'ù' : 'u1',
+     'ú' : 'u1',
+    }
 
 def product(*args):
     """
@@ -74,8 +93,9 @@ if __name__ == "__main__":
 
     for line in sys.stdin:
         line = line.lower().replace('\r','').replace('\n','')
-        output = [[[line]]]
-
+        orig_word = line
+        output = []
+        
         # sostituzione fonemi
         while len(line) > 0:
             found = False
@@ -92,28 +112,37 @@ if __name__ == "__main__":
         #here, output = [[[asia]],[[a]],[[s],[z]],[[j,a]]]
         output = product(*output)
         #now, output = [[[asia],[a],[s],[j,a]],[[asia],[a],[z],[j,a]]]
+
+        #merge
+        for i in range(len(output)):
+            word = output[i] 
+            word = [ph for x in word for ph in x]
+            output[i] = word
+        #now, output = [[asia,a,s,j,a],[asia,a,z,j,a]]
         
         #cerco la penultima vocale
-        last = False
         for word in output:
+            last = False
             for i in reversed(range(len(word))):
                 phonema = word[i]
+                if phonema in LETTERE_ACCENTATE:
+                        word[i] = LETTERE_ACCENTATE_MAP[phonema] 
+                        break
                 if phonema in VOCALI:
                     if not last:
                         # evito l'ultima vocale
                         last = True
                     else:
                         #penultima
-                        output[i] = phonema + "1"     # 'e1' may be 'EE' too :( 
+                        word[i] = phonema + "1"     # 'e1' may be 'EE' too :( 
                         break
-
+        
         #print
         i = 1
         for word in output: 
-            word = [ph for x in word for ph in x]
             if i > 1:
                 word[0] = word[0] + "(" + str(i) + ")"
-            print " ".join(word)
+            print orig_word + " " + " ".join(word)
             i += 1
 
 
