@@ -14,33 +14,33 @@ FONEMI = [     #order is worth, this is not a dict
     # gl    
     ( 'glia' , [['LL','LL','a']]),
     ( 'glie' , [['LL','LL','e']]),
-    ( 'gli' , [['LL','LL','i']]),
     ( 'glio' , [['LL','LL','o']]),
     ( 'gliu' , [['LL','LL','u']]),
+    ( 'gli' , [['LL','LL','i']]),
     ( 'gl' , [['g','l']]),
     # sc
     ( 'scia' , [['SS','SS', 'a']]),
-    ( 'sce' , [['SS','SS', 'e']]),
-    ( 'sci' , [['SS','SS', 'i']]),
     ( 'scio' , [['SS','SS', 'o']]),
     ( 'sciu' , [['SS','SS', 'u']]),
+    ( 'sce' , [['SS','SS', 'e']]),
+    ( 'sci' , [['SS','SS', 'i']]),
     ( 'sc' , [['s','k']]),
     # c,g    
     ( 'cia' , [['tSS','a']]),
-    ( 'ce' , [['tSS','e']]),
-    ( 'ci' , [['tSS','i']]),
     ( 'cio' , [['tSS','o']]),
     ( 'ciu' , [['tSS','u']]),
+    ( 'ce' , [['tSS','e']]),
+    ( 'ci' , [['tSS','i']]),
     ( 'ccia' , [['tSS','tSS','a']]),
-    ( 'cce' , [['tSS','tSS','e']]),
-    ( 'cci' , [['tSS','tSS','i']]),
     ( 'ccio' , [['tSS','tSS','o']]),
     ( 'cciu' , [['tSS','tSS','u']]),
+    ( 'cce' , [['tSS','tSS','e']]),
+    ( 'cci' , [['tSS','tSS','i']]),
     ( 'gia' , [['dZZ','a']]),
-    ( 'ge' , [['dZZ','e']]),
-    ( 'gi' , [['dZZ','i']]),
     ( 'gio' , [['dZZ','o']]),
     ( 'giu' , [['dZZ','u']]),
+    ( 'ge' , [['dZZ','e']]),
+    ( 'gi' , [['dZZ','i']]),
     ( 'ggia' , [['dZZ','dZZ','a']]),
     ( 'gge' , [['dZZ','dZZ','e']]),
     ( 'ggi' , [['dZZ','dZZ','i']]),
@@ -61,21 +61,29 @@ FONEMI = [     #order is worth, this is not a dict
     ( 'iu' , [['j','u']]),
     #apostrofo
     ( '\'' , [[]]),
+    # per le lettere accentate,
+    # la codifica è diversa se sono a fine parola
+    # il problema è che contano non come 1 ma come 2 caratteri
+    ( 'à' , [['a_']]),
+    ( 'á' , [['a_']]),
+    ( 'è' , [['e_']]),
+    ( 'é' , [['e_']]),
+    ( 'ì' , [['i_']]),
+    ( 'í' , [['i_']]),
+    ( 'ò' , [['o_']]),
+    ( 'ó' , [['o_']]),
+    ( 'ù' , [['u_']]),
+    ( 'ú' , [['u_']]),
     ]
 
 VOCALI = [ 'a', 'e', 'i', 'o', 'u']
-LETTERE_ACCENTATE = [ 'à', 'á', 'è', 'é', 'ì', 'ì', 'ò', 'ó', 'ù', 'ú']
+LETTERE_ACCENTATE = [ 'a_', 'e_', 'i_', 'o_', 'u_']
 LETTERE_ACCENTATE_MAP = {
-     'à' : 'a1',
-     'á' : 'a1',    
-     'è' : 'e1',
-     'é' : 'e1',
-     'ì' : 'i1',
-     'í' : 'i1',
-     'ò' : 'o1',
-     'ó' : 'o1',
-     'ù' : 'u1',
-     'ú' : 'u1',
+     'a_' : 'a1',
+     'e_' : 'e1',
+     'i_' : 'i1',
+     'o_' : 'o1',
+     'u_' : 'u1',
     }
 
 def product(*args):
@@ -109,6 +117,9 @@ if __name__ == "__main__":
                 output.append([[line[0]]]) 
                 line = line[1:]
         
+        #debug
+        #print output
+
         #here, output = [[[asia]],[[a]],[[s],[z]],[[j,a]]]
         output = product(*output)
         #now, output = [[[asia],[a],[s],[j,a]],[[asia],[a],[z],[j,a]]]
@@ -136,13 +147,15 @@ if __name__ == "__main__":
                         #penultima
                         word[i] = phonema + "1"     # 'e1' may be 'EE' too :( 
                         break
+            #TODO si potrebbe produrre anche una variante con accento sulla terzultima
         
         #print
         i = 1
-        for word in output: 
+        for word in output:
+            variant = "" 
             if i > 1:
-                word[0] = word[0] + "(" + str(i) + ")"
-            print orig_word + " " + " ".join(word)
+                variant = "(" + str(i) + ")"
+            print orig_word + variant + " " + " ".join(word)
             i += 1
 
 
