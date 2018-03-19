@@ -6,6 +6,9 @@
 #
 # Usage:
 # cat 7346.vocab | ./guess_pronounce.py > 7346.it.dic
+#
+# FIXME gestione degli accenti: troppo complicata
+# accetto tutte le varianti possibili
 
 
 FONEMI = [     #order is worth, this is not a dict
@@ -49,6 +52,8 @@ FONEMI = [     #order is worth, this is not a dict
     ( 'c' , [['k']]),
     ( 'g' , [['g']]),
     ( 'h' , [[]]),
+    #q
+    ( 'q' , [['k']]),
     # s,z -> accettiamo 2 pronunce diverse
     ( 'ss' , [['s','s']]),
     ( 'zz' , [['ts','ts']]),
@@ -59,32 +64,52 @@ FONEMI = [     #order is worth, this is not a dict
     ( 'ia' , [['j','a']]),
     ( 'io' , [['j','o']]),
     ( 'iu' , [['j','u']]),
+    ( 'ui' , [['w','i']]),
+    ( 'ua' , [['w','a']]),
+    ( 'uo' , [['w','o']]),
     #apostrofo
     ( '\'' , [[]]),
-    # per le lettere accentate,
-    # la codifica è diversa se sono a fine parola
-    # il problema è che contano non come 1 ma come 2 caratteri
-    ( 'à' , [['a_']]),
-    ( 'á' , [['a_']]),
-    ( 'è' , [['e_']]),
-    ( 'é' , [['e_']]),
-    ( 'ì' , [['i_']]),
-    ( 'í' , [['i_']]),
-    ( 'ò' , [['o_']]),
-    ( 'ó' , [['o_']]),
-    ( 'ù' , [['u_']]),
-    ( 'ú' , [['u_']]),
+    #vowels
+    ( 'à' , [['a']]),
+    ( 'á' , [['a']]),
+    ( 'e' , [['e']]),
+    ( 'è' , [['e']]),
+    ( 'é' , [['e']]),
+    ( 'i' , [['i']]),
+    ( 'ì' , [['i']]),
+    ( 'í' , [['i']]),
+    ( 'ó' , [['o']]),
+    ( 'ò' , [['o']]),
+    ( 'ù' , [['u']]),
+    ( 'ú' , [['u']]),
+    #for all other 1-byte letters, we assume ( 'x', [['x']])
+    #this is not true for non-ASCII (2-bytes long) characters
     ]
 
-VOCALI = [ 'a', 'e', 'i', 'o', 'u']
-LETTERE_ACCENTATE = [ 'a_', 'e_', 'i_', 'o_', 'u_']
-LETTERE_ACCENTATE_MAP = {
-     'a_' : 'a1',
-     'e_' : 'e1',
-     'i_' : 'i1',
-     'o_' : 'o1',
-     'u_' : 'u1',
+VOWELS = [ 'a', 'e', 'i', 'o', 'u' ]
+
+VOWELS_MAP_ACC = {
+    'a' : ['a1'],
+    'e' : ['e1','EE'],
+    'i' : ['i1'],
+    'o' : ['o1','OO'],
+    'u' : ['u1'],
     }
+
+#    ( 'a' , [['a'],['a1']]),
+#    ( 'à' , [['a'],['a1']]),
+#    ( 'á' , [['a'],['a1']]),
+#    ( 'e' , [['e'],['e1'],['EE']]),
+#    ( 'è' , [['e'],['e1'],['EE']]),
+#    ( 'é' , [['e'],['e1'],['EE']]),
+#    ( 'i' , [['i'],['i1']]),
+#    ( 'ì' , [['i'],['i1']]),
+#    ( 'í' , [['i'],['i1']]),
+#    ( 'o' , [['o'],['o1']]),
+#    ( 'ó' , [['o'],['o1']]),
+#    ( 'u' , [['u'],['u1']]),
+#    ( 'ù' , [['u'],['u1']]),
+#    ( 'ú' , [['u'],['u1']]),
 
 def product(*args):
     """
@@ -120,35 +145,35 @@ if __name__ == "__main__":
         #debug
         #print output
 
-        #here, output = [[[asia]],[[a]],[[s],[z]],[[j,a]]]
+        #here, output = [[[a]],[[s],[z]],[[j,a]]]
         output = product(*output)
-        #now, output = [[[asia],[a],[s],[j,a]],[[asia],[a],[z],[j,a]]]
+        #now, output = [[a],[s],[j,a]],[[a],[z],[j,a]]]
 
         #merge
         for i in range(len(output)):
             word = output[i] 
             word = [ph for x in word for ph in x]
             output[i] = word
-        #now, output = [[asia,a,s,j,a],[asia,a,z,j,a]]
+        #now, output = [[a,s,j,a],[a,z,j,a]]
         
-        #cerco la penultima vocale
+        #1 and only 1 accented vowel
+        newoutput = []
         for word in output:
-            last = False
-            for i in reversed(range(len(word))):
-                phonema = word[i]
-                if phonema in LETTERE_ACCENTATE:
-                        word[i] = LETTERE_ACCENTATE_MAP[phonema] 
-                        break
-                if phonema in VOCALI:
-                    if not last:
-                        # evito l'ultima vocale
-                        last = True
-                    else:
-                        #penultima
-                        word[i] = phonema + "1"     # 'e1' may be 'EE' too :( 
-                        break
-            #TODO si potrebbe produrre anche una variante con accento sulla terzultima
-        
+            has_one_vowel = False
+            i = 0
+            for ph in word:
+                if ph in VOWELS:
+                    has_one_vowel = True
+                    for ph2 in VOWELS_MAP_ACC[ph]:
+                        word2 = list(word)
+                        word2[i] = ph2
+                        newoutput.append(word2)
+                i += 1
+            if not has_one_vowel: # ?!?
+                newoutput.append(word)
+        output = newoutput
+        #now, output = [[a1,s,j,a],[a,s,j,a1],[a1,z,j,a],[a,z,j,a1]]
+
         #print
         i = 1
         for word in output:
