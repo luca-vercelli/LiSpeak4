@@ -7,6 +7,9 @@
 # Usage:
 # cat 7346.vocab | ./guess_pronounce.py > 7346.it.dic
 #
+# or, in Windows:
+# type 7346.vocab | python guess_pronounce.py > 7346.it.dic
+#
 # FIXME gestione degli accenti: troppo complicata
 # accetto tutte le varianti possibili
 
@@ -67,6 +70,12 @@ FONEMI = [     #order is worth, this is not a dict
     ( 'ui' , [['w','i']]),
     ( 'ua' , [['w','a']]),
     ( 'uo' , [['w','o']]),
+    #stranger letters (most likely errors)
+    ( 'j' , [['dZZ']]),
+    ( 'k' , [['k']]),
+    ( 'w' , [['v']]),
+    ( 'x' , [['k', 's']]),
+    ( 'y' , [['j']]),
     #apostrofo
     ( '\'' , [[]]),
     #vowels
@@ -125,8 +134,10 @@ if __name__ == "__main__":
     import sys
 
     for line in sys.stdin:
+		# phonems in AM are lowercase
+		# words in LM are uppercase
         line = line.lower().replace('\r','').replace('\n','')
-        orig_word = line
+        orig_word = line.upper()
         output = []
         
         # sostituzione fonemi
