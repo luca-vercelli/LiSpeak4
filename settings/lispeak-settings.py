@@ -38,7 +38,7 @@ class SettingsWindow:
 
     def onClose(self, *args):
         Gtk.main_quit(args)
-        #TODO run lispeak? or not?
+        #TODO run lispeak? or not? 
 
     def onSwitchSpeakResponse(self, widget, enabled):
         self.userinfo['tts'] = str(enabled)
@@ -55,6 +55,10 @@ class SettingsWindow:
 
     def onEngineChange(self, widget):
         self.userinfo['ttsengine'] = widget.get_active_text()
+        save_user_info(self.userinfo)
+
+    def onOperatorChange(self, widget):
+        self.userinfo['operator'] = widget.get_text()
         save_user_info(self.userinfo)
 
     def openAbout(self,widget):
@@ -94,6 +98,8 @@ class SettingsWindow:
                 self.builder.get_object("cmbLang").set_active(0)
         else:
             self.builder.get_object("cmbLang").set_active(0)
+        if "operator" in user_info:
+            self.builder.get_object("inputOperator").set_text(user_info["operator"])
 
 
 def open_dialog():

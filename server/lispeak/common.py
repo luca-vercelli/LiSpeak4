@@ -43,9 +43,12 @@ def load_user_info():
     Load user info from configuration file
     @return dict
     """
-    import ConfigParser
+    import ConfigParser, locale
     defaults = {
-        "autostart" : "False"
+        "autostart" : "False",
+        "lang"      : locale.getdefaultlocale()[0][1:2],
+        "tts"       : "False",
+        "operator"  : _("Operator"),
         }
     config = ConfigParser.ConfigParser(defaults)
     try:
