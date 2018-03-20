@@ -2,8 +2,6 @@
 
 from common import *
 
-SPEECH2TEXT = "speech2text"
-DICTIONARY = "dictionary"
 DICT_PREFIX = "dictionary/modes/it"        #FIXME
 
 running = False

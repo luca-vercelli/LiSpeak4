@@ -19,9 +19,13 @@ CONFIG_DIR = os.path.join(HOME, ".lispeak4")      # os.path.join works in either
 CONFIG_FILE = os.path.join(HOME, ".lispeak4", "lispeak.conf") 
 CONFIG_SECTION1 = "General"
 AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"    # Autostart feature is Linux specific
-GLADE_TEMPLATE_LOCATION=['.', datarootdir + '/lispeak/glade']
+GLADE_TEMPLATE_FOLDER = datarootdir + '/lispeak/glade' if os.path.isdir(datarootdir + '/lispeak/glade') else '.'
 MODE_FILE = os.path.join(HOME, ".lispeak4", "mode")
 DEFAULT_MODE = "main"
+SPEECH2TEXT = os.path.join(bindir, "speech2text")
+DICTIONARY = os.path.join(bindir, "dictionary")
+SETTINGS_BIN = os.path.join(bindir, "lispeak-settings")
+LISPEAK_BIN = os.path.join(bindir, "lispeak")
 
 if os.path.exists(CONFIG_DIR) and not os.path.isdir(CONFIG_DIR):
     os.remove(CONFIG_DIR)
@@ -29,15 +33,6 @@ if not os.path.exists(CONFIG_DIR):
     os.makedirs(CONFIG_DIR)
 
 
-def get_glade_folder():
-    """
-    Return the folder where you we can find 
-    Glade templates and images
-    """
-    for path in GLADE_TEMPLATE_LOCATION:
-        if os.path.isfile(os.path.join(path, "settings.glade")):
-            return path
-    
 def load_user_info():
     """
     Load user info from configuration file
@@ -99,7 +94,7 @@ Name=LiSpeak
 GenericName=LiSpeak
 Name[en_CA]=LiSpeak
 Comment=LiSpeak is a voice command and control system
-Exec="""+bindir+"""/lispeak
+Exec="""+LISPEAK_BIN+"""
 Terminal=false
 Type=Application
 Categories=Application;

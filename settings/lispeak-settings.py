@@ -10,6 +10,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
+import os
+
 import gettext
 gettext.textdomain('lispeak')
 _ = gettext.gettext
@@ -17,8 +19,6 @@ _ = gettext.gettext
 class SettingsWindow:
     def __init__(self):
     
-        glade_folder = get_glade_folder()
-
         self.lang_codes = {"English":"en", "Polski":"pl", "Español":"es", "Français":"fr", "Italiano":"it"}
         self.languages = self.lang_codes.keys()
         self.lang_decode = { self.lang_codes[l] : l for l in self.languages}
@@ -26,7 +26,7 @@ class SettingsWindow:
         self.userinfo = load_user_info()
 
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(glade_folder + "/settings.glade")
+        self.builder.add_from_file(os.path.join(GLADE_TEMPLATE_FOLDER, "settings.glade"))
         self.builder.connect_signals(self)
 
         self.window = self.builder.get_object("window1")
