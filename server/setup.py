@@ -12,5 +12,6 @@ setup(name='LiSpeak4',
       author_email='luca.vercelli.to@gmail.com',
       url=None,
       packages=['lispeak'],
+      scripts=['scripts/lispeak'],
       license='GPL-3.0'
      )

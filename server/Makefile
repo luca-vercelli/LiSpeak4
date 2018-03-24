@@ -35,10 +35,10 @@ install: mkinstalldirs
 	echo "bindir='$(bindir)'" >> lispeak/make_conf.py  
 	echo "datarootdir='$(datarootdir)'" >> lispeak/make_conf.py  
 	./setup.py build
+	#
 	# Here starts the real install
 	./setup.py install --prefix=$(prefix)
 	# defaults to $(prefix)/lib/python2.7/dist-packages/ or site-packages 
-	install -m=755 lispeak-server.py $(DESTDIR)$(bindir)/lispeak
 
 uninstall:
 	rm -rf $(DESTDIR)$(bindir)/lispeak
