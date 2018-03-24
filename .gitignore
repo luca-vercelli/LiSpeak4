@@ -16,3 +16,6 @@ dictionary/dictionary
 server/build
 
 *.pyc
+
+# This is 500MB
+language-models/en/en-70k-0.2.lm
