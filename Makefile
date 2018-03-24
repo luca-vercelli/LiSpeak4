@@ -1,4 +1,4 @@
-DIRS=dictionary speech2text server settings
+DIRS=dictionary speech2text server settings i18n
 
 #if user is not root, should run with: 
 #make install prefix=~/.local exec_prefix=~
