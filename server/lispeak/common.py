@@ -7,59 +7,70 @@ _ = gettext.gettext
 
 import os
 
-try:
-    from make_conf import *
-except:
-    prefix='.'
-    datarootdir='.'
-    bindir='.'
- 
+#Is this needed? It works in Linux only.
+os.environ["PATH"] = ".:" + os.environ["PATH"]
+
+def get_template_folder():
+    global HOME
+    for d in ['.', os.path.join(HOME, ".local", "share"), "/usr/local/share", "/usr/share"]:
+        if os.isdir(d):
+            if os.exists(os.path.join(d, x)):
+                return d
+    return "."
+
 HOME = os.path.expanduser("~")                    # This works in either Windows and Linux
 CONFIG_DIR = os.path.join(HOME, ".lispeak4")      # os.path.join works in either Windows and Linux
 CONFIG_FILE = os.path.join(HOME, ".lispeak4", "lispeak.conf") 
 CONFIG_SECTION1 = "General"
 AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"    # Autostart feature is Linux specific
-GLADE_TEMPLATE_FOLDER = datarootdir + '/lispeak/glade' if os.path.isdir(datarootdir + '/lispeak/glade') else '.'
+GLADE_TEMPLATE_FOLDER = findshare('/lispeak/glade')
 MODE_FILE = os.path.join(HOME, ".lispeak4", "mode")
 DEFAULT_MODE = "main"
-SPEECH2TEXT = os.path.join(bindir, "speech2text")
-DICTIONARY = os.path.join(bindir, "dictionary")
-SETTINGS_BIN = os.path.join(bindir, "lispeak-settings")
-LISPEAK_BIN = os.path.join(bindir, "lispeak")
+SPEECH2TEXT = "speech2text"
+DICTIONARY = "dictionary"
+SETTINGS_BIN = "lispeak-settings"
+LISPEAK_BIN = "lispeak"
 
+#Setup CONFIG_DIR
 if os.path.exists(CONFIG_DIR) and not os.path.isdir(CONFIG_DIR):
     os.remove(CONFIG_DIR)
 if not os.path.exists(CONFIG_DIR):
     os.makedirs(CONFIG_DIR)
 
+import locale
+USER_INFO_DEFAULTS = {
+        "autostart" : "False",
+        "lang"      : locale.getdefaultlocale()[0][1:2],
+        "tts"       : "False",
+        "operator"  : _("Operator"),
+        }
 
 def load_user_info():
     """
     Load user info from configuration file
     @return dict
     """
-    import ConfigParser, locale
-    defaults = {
-        "autostart" : "False",
-        "lang"      : locale.getdefaultlocale()[0][1:2],
-        "tts"       : "False",
-        "operator"  : _("Operator"),
-        }
-    config = ConfigParser.ConfigParser(defaults)
+    import ConfigParser
+    global USER_INFO_DEFAULTS
+    config = ConfigParser.ConfigParser(USER_INFO_DEFAULTS)
     try:
         config.read(CONFIG_FILE)
         return dict(config.items(CONFIG_SECTION1))
     except:
-        return defaults
+        return dict(USER_INFO_DEFAULTS)
 
 def save_user_info(user_info_dict):
     """
     Write user info to configuration file
     """
     import ConfigParser
+    global USER_INFO_DEFAULTS
+    user_info_complete = dict()
+    user_info_complete.update(USER_INFO_DEFAULTS)
+    user_info_complete.update(user_info_dict)
     config = ConfigParser.RawConfigParser()
     config.add_section(CONFIG_SECTION1)
-    for key, value in user_info_dict.iteritems():
+    for key, value in user_info_complete.iteritems():
         config.set(CONFIG_SECTION1, str(key), str(value))
     with open(CONFIG_FILE, 'wb') as configfile:
         config.write(configfile)

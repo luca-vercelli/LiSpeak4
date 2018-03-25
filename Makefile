@@ -11,12 +11,12 @@ all:
 mkinstalldirs:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ ); done
 
-install:
+install: mkinstalldirs
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ ); done
 
 uninstall:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ ); done
 
-clean :
+clean:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ ); done
 

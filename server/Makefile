@@ -22,21 +22,12 @@ all:
 clean:
 	rm -rf build
 	rm -rf lispeak/*.pyc
-	rm -rf lispeak/make_conf.py
 
 mkinstalldirs:
 	mkdir -p $(DESTDIR)$(bindir)
 	mkdir -p $(DESTDIR)$(datarootdir)/lispeak
 
 install: mkinstalldirs
-	# We rebuild the package in order to create make_conf.py. Any other way?
-	echo > lispeak/make_conf.py  
-	echo "prefix='$(prefix)'" >> lispeak/make_conf.py  
-	echo "bindir='$(bindir)'" >> lispeak/make_conf.py  
-	echo "datarootdir='$(datarootdir)'" >> lispeak/make_conf.py  
-	./setup.py build
-	#
-	# Here starts the real install
 	./setup.py install --prefix=$(prefix)
 	# defaults to $(prefix)/lib/python2.7/dist-packages/ or site-packages 
 
