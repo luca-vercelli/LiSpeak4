@@ -77,6 +77,18 @@ public class AppCli {
 			this.micRecognizer = new LiveSpeechRecognizer(configuration);
 	}
 
+    private String searchModelsDir(String lang) {
+        String[] trials = {
+                "~/.local/share/sphinx-lispeak-" + options.lang,
+                "/usr/local/share/sphinx-lispeak-" + options.lang,
+                "/usr/share/sphinx-lispeak-" + options.lang
+                };
+        for (String trial: trials)
+            if (new File(trial).exists())
+                return trial;
+        throw new IllegalArgumentException("Folder not found for language: " + lang);
+    }
+
 	/**
 	 * Create a configuration object from options
 	 * 
@@ -84,14 +96,14 @@ public class AppCli {
 	 */
 	public Configuration getConfiguration() {
 		Configuration configuration = new Configuration();
+        String dir = searchModelsDir(options.lang);
 
 		if (options.acousticmodel == null)
-			options.acousticmodel = "resource:/speech_recognition/data/" + options.lang + "/acoustic-model";
+			options.acousticmodel = dir + "/acoustic-model";
 		if (options.dictionary == null)
-			options.dictionary = "resource:/speech_recognition/data/" + options.lang
-					+ "/pronounciation-dictionary.dict";
+			options.dictionary = dir + "/pronounciation-dictionary.dict";
 		if (options.languagemodel == null)
-			options.languagemodel = "resource:/speech_recognition/data/" + options.lang + "/language-model.lm";
+			options.languagemodel = dir + "/language-model.lm";
 
 		configuration.setAcousticModelPath(options.acousticmodel);
 		configuration.setDictionaryPath(options.dictionary);

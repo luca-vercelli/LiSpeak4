@@ -14,6 +14,8 @@ M2REPO=~/.m2/repository
 JARNAME=speech2text-0.1.jar
 JARLINK=speech2text.jar
 
+LANGUAGES=it en
+
 #AFAIK, we have 2 possibilities to run a JAR:
 #(1) create a script that simply contains "java -jar myfile.jar"
 #(2) let Linux to know how to open jar's
@@ -40,12 +42,15 @@ install: mkinstalldirs
 	ln -sf $(DESTDIR)$(datarootdir)/java/cli-parser-1.1.2.jar $(DESTDIR)$(datarootdir)/java/cli-parser.jar
 	#Run script
 	install -m 775 src/main/sh/speech2text.sh $(DESTDIR)$(bindir)/speech2text
+	#Now, copy data
+	for l in $(LANGUAGES); do  (cp -r data/$$l $(DESTDIR)$(datarootdir)/sphinx-lispeak-$$l ) ; done
 
 uninstall:
 	rm -rf $(DESTDIR)$(bindir)/speech2text
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARLINK)
 	rm -rf $(DESTDIR)$(datarootdir)/java/$(JARNAME)
-    #We do not remove dependencies... Very Windows-style...
+	#We do not remove dependencies... Very Windows-style...
+	for l in $(LANGUAGES); do  (rm -rf $(DESTDIR)$(datarootdir)/sphinx-lispeak-$$l ) ; done
 
 clean:
 	mvn clean

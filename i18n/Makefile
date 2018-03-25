@@ -31,5 +31,5 @@ uninstall:
 	for l in $(LANGUAGES); do  (rm -f $(DESTDIR)$(datarootdir)/locale/$$l/LC_MESSAGES/lispeak.mo ) ; done
 
 clean:
-	rm *.mo
+	rm -f *.mo
 
