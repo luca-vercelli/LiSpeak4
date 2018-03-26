@@ -13,8 +13,8 @@ os.environ["PATH"] = ".:" + os.environ["PATH"]
 def get_template_folder():
     global HOME
     for d in ['.', os.path.join(HOME, ".local", "share"), "/usr/local/share", "/usr/share"]:
-        if os.isdir(d):
-            if os.exists(os.path.join(d, x)):
+        if os.path.isdir(d):
+            if os.path.exists(os.path.join(d, "lispeak", "glade")):
                 return d
     return "."
 
@@ -23,7 +23,7 @@ CONFIG_DIR = os.path.join(HOME, ".lispeak4")      # os.path.join works in either
 CONFIG_FILE = os.path.join(HOME, ".lispeak4", "lispeak.conf") 
 CONFIG_SECTION1 = "General"
 AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"    # Autostart feature is Linux specific
-GLADE_TEMPLATE_FOLDER = findshare('/lispeak/glade')
+GLADE_TEMPLATE_FOLDER = get_template_folder()
 MODE_FILE = os.path.join(HOME, ".lispeak4", "mode")
 DEFAULT_MODE = "main"
 SPEECH2TEXT = "speech2text"
