@@ -8,15 +8,52 @@ _ = gettext.gettext
 import os
 
 #Is this needed? It works in Linux only.
-os.environ["PATH"] = ".:" + os.environ["PATH"]
+#os.environ["PATH"] = ".:" + os.environ["PATH"]
 
 def get_template_folder():
+    """
+    Guess where are stored Glade templates
+    """
     global HOME
     for d in ['.', os.path.join(HOME, ".local", "share"), "/usr/local/share", "/usr/share"]:
         if os.path.isdir(d):
             if os.path.exists(os.path.join(d, "lispeak", "glade")):
                 return d
     return "."
+
+def add_to_syspath(path_or_paths):
+    """
+    Add given path/s to sys.path (i.e. os.environ["PYTHONPATH"] )
+    """
+    import sys
+    if isinstance(path_or_paths, basestring):
+        path = path_or_paths
+        sys.path.append(path)
+    else:
+        paths = path_or_paths
+        sys.path.extend(paths)
+
+def add_to_path(path_or_paths):
+    """
+    Add given path/s to os.environ["PATH"]
+    """
+    separator = ";" if os.name == 'nt' else ':'
+    if isinstance(path_or_paths, basestring):
+        path = path_or_paths
+        os.environ["PATH"] = path + separator + os.environ["PATH"]
+    else:
+        os.environ["PATH"] = separator.join(path_or_paths) + separator + os.environ["PATH"]
+
+def add_all_possible_paths():
+    """
+    Guess PATH
+    This is not needed if program is properly installed
+    """
+    for dir in ["server", "settings", "dictionary", "speech2text"]:
+        add_to_path(os.path.join(".", dir))
+        add_to_path(os.path.join("..", dir))
+
+add_all_possible_paths()
 
 HOME = os.path.expanduser("~")                    # This works in either Windows and Linux
 CONFIG_DIR = os.path.join(HOME, ".lispeak4")      # os.path.join works in either Windows and Linux
@@ -30,6 +67,7 @@ SPEECH2TEXT = "speech2text"
 DICTIONARY = "dictionary"
 SETTINGS_BIN = "lispeak-settings"
 LISPEAK_BIN = "lispeak"
+
 
 #Setup CONFIG_DIR
 if os.path.exists(CONFIG_DIR) and not os.path.isdir(CONFIG_DIR):
