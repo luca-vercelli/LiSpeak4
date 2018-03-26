@@ -37,7 +37,7 @@ def add_to_path(path_or_paths):
     """
     Add given path/s to os.environ["PATH"]
     """
-    separator = ";" if os.name == 'nt' else ':'
+    separator = ';' if os.name == 'nt' else ':'
     if isinstance(path_or_paths, basestring):
         path = path_or_paths
         os.environ["PATH"] = path + separator + os.environ["PATH"]
