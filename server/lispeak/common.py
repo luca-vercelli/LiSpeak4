@@ -36,6 +36,7 @@ def add_to_syspath(path_or_paths):
 def add_to_path(path_or_paths):
     """
     Add given path/s to os.environ["PATH"]
+    Warning: this affects os.system, not subprocess.xxx
     """
     separator = ';' if os.name == 'nt' else ':'
     if isinstance(path_or_paths, basestring):
@@ -48,13 +49,38 @@ def add_all_possible_paths():
     """
     Guess PATH
     This is not needed if program is properly installed
+    Warning: this affects os.system, not subprocess.xxx
     """
     for dir in ["server", "settings", "dictionary", "speech2text"]:
         add_to_path(os.path.join(".", dir))
         add_to_path(os.path.join("..", dir))
 
-add_all_possible_paths()
+def search_bin(program):
+    """
+    Search given program in most probable locations
+    raise ValureError if not found
+    """
+    global HOME
+    for dir in ["/bin", "/usr/bin", "/usr/local/bin", "/opt", "/opt/bin",
+            os.path.join(HOME, "bin"), os.path.join(HOME, ".local", "bin"), os.path.join(HOME, ".local", "bin"), ".",
+            os.path.join("..", "server"), os.path.join("..", "settings"), os.path.join("..", "dictionary"), os.path.join("..", "speech2text")]:
+        if os.path.isdir(dir):
+            fullpath = os.path.join(dir, program)
+            if os.path.exists(fullpath):
+                return fullpath
+    raise ValueError("Cannot find executable: " + program)
 
+def search_bin_or_None(program):
+    """
+    Search given program in most probable locations
+    return none if not found
+    """
+    try:
+        return search_bin(program)
+    except ValueError, e:
+        print str(e)
+        return None
+    
 HOME = os.path.expanduser("~")                    # This works in either Windows and Linux
 CONFIG_DIR = os.path.join(HOME, ".lispeak4")      # os.path.join works in either Windows and Linux
 CONFIG_FILE = os.path.join(HOME, ".lispeak4", "lispeak.conf") 
@@ -63,10 +89,10 @@ AUTOSTART_FILE = HOME + "/.config/autostart/lispeak.desktop"    # Autostart feat
 GLADE_TEMPLATE_FOLDER = get_template_folder()
 MODE_FILE = os.path.join(HOME, ".lispeak4", "mode")
 DEFAULT_MODE = "main"
-SPEECH2TEXT = "speech2text"
-DICTIONARY = "dictionary"
-SETTINGS_BIN = "lispeak-settings"
-LISPEAK_BIN = "lispeak"
+SPEECH2TEXT_BIN = search_bin_or_None("speech2text")
+DICTIONARY_BIN = search_bin_or_None("dictionary")
+SETTINGS_BIN = search_bin_or_None("lispeak-settings")
+LISPEAK_BIN = search_bin_or_None("lispeak")
 
 
 #Setup CONFIG_DIR

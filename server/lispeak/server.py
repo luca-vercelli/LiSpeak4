@@ -20,7 +20,7 @@ def start_speech2text_service():
         print "Something's wrong. speech2text_pid = ", speech2text_pid
         raise Error
     import subprocess
-    p = subprocess.Popen([SPEECH2TEXT, "-l", userinfo['lang']], stdout=subprocess.PIPE)
+    p = subprocess.Popen([SPEECH2TEXT_BIN, "-l", userinfo['lang']], stdout=subprocess.PIPE)
     speech2text_pid = p.pid
     return p.stdout, p.stderr
 
@@ -44,7 +44,7 @@ def run_dictionary(text_line):
     print "Running dictionary for:", text_line
     
     dic_file = os.path.join([DICT_PREFIX, userinfo['lang'], get_current_mode(), ".dic"])
-    return subprocess.check_output([DICTIONARY, text_line, dic_file])
+    return subprocess.check_output([DICTIONARY_BIN, text_line, dic_file])
 
 def execute_final_command(command):
     """
