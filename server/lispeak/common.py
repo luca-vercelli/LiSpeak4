@@ -66,7 +66,7 @@ def search_bin(program):
             os.path.join("..", "server"), os.path.join("..", "settings"), os.path.join("..", "dictionary"), os.path.join("..", "speech2text")]:
         if os.path.isdir(dir):
             fullpath = os.path.join(dir, program)
-            if os.path.exists(fullpath):
+            if os.path.isfile(fullpath):
                 return fullpath
     raise ValueError("Cannot find executable: " + program)
 
