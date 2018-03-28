@@ -1,17 +1,17 @@
-# SOME DESCRIPTIVE TITLE.
+# LiSpeak
 # FIRST AUTHOR luca.vercelli.to@gmail.com, 2018.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: lispeak 1.0\n"
 "POT-Creation-Date: 2018-03-24 18:03+CET\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2018-03-28 14:19+CET\n"
+"Last-Translator: Luca Vercelli <luca.vercelli.to@gmail.com>\n"
+"Language-Team: LANGUAGE <langteam@example.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: UTF-8\n"
 "Generated-By: pygettext.py 1.5\n"
 
 
