@@ -11,6 +11,7 @@ libdir=$(exec_prefix)/lib
 localstatedir=/var
 runstatedir=$(localstatedir)/run
 DESTDIR=
+VERSION=0.1
 
 #if user is not root, should run with: 
 #make install prefix=~/.local exec_prefix=~
@@ -35,5 +36,7 @@ uninstall:
 	rm -rf $(DESTDIR)$(bindir)/lispeak
 	#hope to find correct path 
 	rm -rf $(DESTDIR)$(prefix)/lib/python2.7/site-packages/lispeak
+	rm -rf $(DESTDIR)$(prefix)/lib/python2.7/site-packages/LiSpeak4-$(VERSION)-py2.7.egg-info
 	rm -rf $(DESTDIR)$(prefix)/lib/python2.7/dist-packages/lispeak
+	rm -rf $(DESTDIR)$(prefix)/lib/python2.7/dist-packages/LiSpeak4-$(VERSION)-py2.7.egg-info
 

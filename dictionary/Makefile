@@ -41,7 +41,7 @@ install: mkinstalldirs
 	cp -r modes $(DESTDIR)$(datarootdir)/lispeak/
 
 uninstall:
-	rm -rf $(DESTDIR)$(datarootdir)/modes
+	rm -rf $(DESTDIR)$(datarootdir)/lispeak/modes
 	rm -rf $(DESTDIR)$(datarootdir)/gtksourceview-2.0/language-specs/lidic.lang
 	rm -rf $(DESTDIR)$(datarootdir)/gtksourceview-3.0/language-specs/lidic.lang
 	rm -rf $(DESTDIR)$(mandir)/man1/$(EXECUTABLE).1.gz
