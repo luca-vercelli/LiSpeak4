@@ -2,7 +2,7 @@
 
 from common import *
 
-DICT_PREFIX = "dictionary/modes/it"        #FIXME
+DICT_PREFIX = "/usr/local/share/lispeak/modes"        #FIXME
 
 running = False
 userinfo = None
@@ -43,7 +43,8 @@ def run_dictionary(text_line):
     
     print "Running dictionary for:", text_line
     
-    dic_file = os.path.join([DICT_PREFIX, userinfo['lang'], get_current_mode(), ".dic"])
+    dic_file = os.path.join(DICT_PREFIX, userinfo['lang'], get_current_mode() + ".dic")
+    print "Using dictionary:", dic_file
     return subprocess.check_output([DICTIONARY_BIN, text_line, dic_file])
 
 def execute_final_command(command):
@@ -69,17 +70,25 @@ def start():
 
     while True:
         out, err = start_speech2text_service()
-        
-        for line in out:
-            command = run_dictionary(line)
-            execute_final_command(command)
-            
-            # Has the final command modified language?
-            oldlang = userinfo.lang
-            userinfo = load_user_info()
-            if oldlang != userinfo['lang']:
-                stop_speech2text_service()
-                start_speech2text_service()
+        print "LiSpeak service started"
+        done = False
+        while not done:
+            line = out.readline()
+            if line == '':  #FIXME is this the righe condition? How to test EOF?
+                done = True
+            else:
+                print "Got line:", line
+                command = run_dictionary(line)
+                print "Got command:", command
+                execute_final_command(command)
+                print "Command executed."
+                
+                # Has the final command modified language?
+                oldlang = userinfo.lang
+                userinfo = load_user_info()
+                if oldlang != userinfo['lang']:
+                    stop_speech2text_service()
+                    start_speech2text_service()
                 
 
 
