@@ -9,7 +9,6 @@ userinfo = None
 speech2text_pid = None
 mode = DEFAULT_MODE
 
-
 def start_speech2text_service():
     """
     Start speech2text daemon, using current language
@@ -29,8 +28,8 @@ def stop_speech2text_service():
     Kill speech2text daemon
     """
     global speech2text_pid
-    import os
-    os.kill(speech2text_pid)
+    import os, signal
+    os.kill(speech2text_pid, signal.SIGKILL)
     speech2text_pid = None
 
 def run_dictionary(text_line):
@@ -55,6 +54,7 @@ def execute_final_command(command):
     import subprocess
     return subprocess.check_output(command)
 
+
 def start():
     global running, userinfo
     if running:
@@ -62,13 +62,22 @@ def start():
         return
         
     running = True
-    
+
+    # when main program is killed, kill speech2text too    
+    def  signal_handler(signal, frame):
+        stop_speech2text_service()
+        import sys
+        sys.exit(0)
+    import signal
+    signal.signal(signal.SIGINT, signal_handler)
+
     set_current_mode()
-    
+
     userinfo = load_user_info()
     print "UserInfo:", userinfo
 
-    while True:
+    try:
+      while True:
         out, err = start_speech2text_service()
         print "LiSpeak service started"
         done = False
@@ -89,6 +98,15 @@ def start():
                 if oldlang != userinfo['lang']:
                     stop_speech2text_service()
                     start_speech2text_service()
-                
+    except Exception as e:
+      stop_speech2text_service()
+      raise e
+    except KeyboardInterrupt as e:
+      stop_speech2text_service()
+      raise e
+    except SystemExit as e:
+      stop_speech2text_service()
+      raise e
+
 
 
