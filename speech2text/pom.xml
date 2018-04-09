@@ -22,6 +22,15 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
@@ -34,7 +43,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 			<!-- The folowing allows to run the program using mvn exec:java -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -43,7 +52,7 @@
 				<configuration>
 					<mainClass>org.lispeak.speech2text.AppCli</mainClass>
 				</configuration>
-        </plugin>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -64,13 +73,17 @@
 			<artifactId>ini4j</artifactId>
 			<version>0.5.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.github.spullara.cli-parser</groupId>
 			<artifactId>cli-parser</artifactId>
 			<version>1.1.2</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>com.sparkjava</groupId>
+			<artifactId>spark-core</artifactId>
+			<version>2.7.2</version>
+		</dependency>
 	</dependencies>
 </project>
