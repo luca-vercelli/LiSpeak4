@@ -179,7 +179,7 @@ public class AppCli {
 		} catch (IOException e) {
 			System.err.println("I/O error reading configuration file. It will be ignored.");
 		}
-		String lang = (fileini != null) ? fileini.node(CONFIG_SECTION1).get("lang", LANG_DEFAULT) : null;
+		String lang = (fileini != null) ? fileini.node(CONFIG_SECTION1).get("lang", LANG_DEFAULT) : LANG_DEFAULT;
 		return lang;
 	}
 
