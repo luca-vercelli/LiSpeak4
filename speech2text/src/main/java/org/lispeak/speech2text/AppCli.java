@@ -99,7 +99,6 @@ public class AppCli {
 	}
 
 	private String searchModelsDir(String lang) {
-		System.out.println(new File(".").getAbsolutePath());
 		String[] trials = { "~/.local/share/sphinx-lispeak-" + options.lang,
 				"/usr/local/share/sphinx-lispeak-" + options.lang, "/usr/share/sphinx-lispeak-" + options.lang,
 				"data" + File.separator + options.lang,
