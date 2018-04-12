@@ -67,7 +67,10 @@ public class AppCli {
 
 	public AppCli(CliArguments options) throws IOException {
 		this.options = options;
+		createRecognizer();
+	}
 
+	protected void createRecognizer() throws IOException {
 		if (this.options.lang == null)
 			this.options.lang = getLanguage();
 		Configuration configuration = getConfiguration();
@@ -76,6 +79,23 @@ public class AppCli {
 			this.streamRecognizer = new StreamSpeechRecognizer(configuration);
 		else
 			this.micRecognizer = new LiveSpeechRecognizer(configuration);
+	}
+
+	protected void pauseRecognition() {
+		if (this.micRecognizer != null)
+			this.micRecognizer.stopRecognition();
+		if (this.streamRecognizer != null)
+			this.streamRecognizer.stopRecognition();
+	}
+
+	protected void resumeRecognition() {
+		if (options.stdin) {
+			if (this.streamRecognizer != null)
+				this.streamRecognizer.startRecognition(System.in);
+		} else {
+			if (this.micRecognizer != null)
+				this.micRecognizer.startRecognition(false);
+		}
 	}
 
 	private String searchModelsDir(String lang) {
@@ -197,4 +217,5 @@ public class AppCli {
 		Ini ini = new Ini(fileini);
 		return new IniPreferences(ini);
 	}
+
 }
