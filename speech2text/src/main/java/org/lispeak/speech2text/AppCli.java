@@ -121,7 +121,7 @@ public class AppCli {
 		if (options.dictionary == null)
 			options.dictionary = dir + "/pronounciation-dictionary.dict";
 		if (options.languagemodel == null)
-			options.languagemodel = dir + "/language-model.lm";
+			options.languagemodel = dir + "/language-model.lm.bin";
 
 		configuration.setAcousticModelPath(options.acousticmodel);
 		configuration.setDictionaryPath(options.dictionary);

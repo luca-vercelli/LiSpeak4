@@ -22,6 +22,7 @@ LANGUAGES=it en
 
 all:
 	mvn package
+	for l in $(LANGUAGES); do  (cd data/$$l && sphinx_lm_convert -i language-model.lm -o language-model.lm.bin ) ; done
 
 mkinstalldirs:
 	mkdir -p $(DESTDIR)$(bindir)
