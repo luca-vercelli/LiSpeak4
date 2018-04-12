@@ -26,7 +26,8 @@ import edu.cmu.sphinx.api.StreamSpeechRecognizer;
  */
 public class AppCli {
 
-	public final static String CONFIG_FILE = System.getProperty("user.home") + File.separator + ".lispeak4";
+	public final static String CONFIG_FILE = System.getProperty("user.home") + File.separator + ".lispeak4"
+			+ File.separator + "lispeak.conf";
 	public final static String CONFIG_SECTION1 = "General";
 	public final static String LANG_DEFAULT = Locale.getDefault().getLanguage();
 	public final static String VERSION = "0.1";
@@ -66,7 +67,7 @@ public class AppCli {
 
 	public AppCli(CliArguments options) throws IOException {
 		this.options = options;
-		
+
 		if (this.options.lang == null)
 			this.options.lang = getLanguage();
 		Configuration configuration = getConfiguration();
@@ -77,17 +78,14 @@ public class AppCli {
 			this.micRecognizer = new LiveSpeechRecognizer(configuration);
 	}
 
-    private String searchModelsDir(String lang) {
-        String[] trials = {
-                "~/.local/share/sphinx-lispeak-" + options.lang,
-                "/usr/local/share/sphinx-lispeak-" + options.lang,
-                "/usr/share/sphinx-lispeak-" + options.lang
-                };
-        for (String trial: trials)
-            if (new File(trial).exists())
-                return trial;
-        throw new IllegalArgumentException("Folder not found for language: " + lang);
-    }
+	private String searchModelsDir(String lang) {
+		String[] trials = { "~/.local/share/sphinx-lispeak-" + options.lang,
+				"/usr/local/share/sphinx-lispeak-" + options.lang, "/usr/share/sphinx-lispeak-" + options.lang };
+		for (String trial : trials)
+			if (new File(trial).exists())
+				return trial;
+		throw new IllegalArgumentException("Folder not found for language: " + lang);
+	}
 
 	/**
 	 * Create a configuration object from options
@@ -96,7 +94,7 @@ public class AppCli {
 	 */
 	public Configuration getConfiguration() {
 		Configuration configuration = new Configuration();
-        String dir = searchModelsDir(options.lang);
+		String dir = searchModelsDir(options.lang);
 
 		if (options.acousticmodel == null)
 			options.acousticmodel = dir + "/acoustic-model";
