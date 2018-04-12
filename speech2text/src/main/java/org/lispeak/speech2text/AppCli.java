@@ -32,30 +32,15 @@ public class AppCli {
 	public final static String LANG_DEFAULT = Locale.getDefault().getLanguage();
 	public final static String VERSION = "0.1";
 
-	CliArguments options;
-	LiveSpeechRecognizer micRecognizer;
-	StreamSpeechRecognizer streamRecognizer;
+	protected CliArguments options;
+	protected LiveSpeechRecognizer micRecognizer;
+	protected StreamSpeechRecognizer streamRecognizer;
+	protected boolean exitRequested = false;
+	protected boolean pauseRequested = false;
 
 	public static void main(String[] args) throws Exception {
 
-		CliArguments options = new CliArguments();
-		List<String> arguments = Args.parseOrExit(options, args);
-
-		if (options.version) {
-			System.err.println("Version " + VERSION);
-			return;
-		}
-
-		if (options.help) {
-			Args.usage(CliArguments.class);
-			return;
-		}
-
-		if (arguments.size() > 0) {
-			System.err.println("Unexpected arguments");
-			Args.usage(CliArguments.class);
-			System.exit(1);
-		}
+		CliArguments options = defaultArgumentsHandling(args);
 
 		AppCli app = new AppCli(options);
 
@@ -65,11 +50,39 @@ public class AppCli {
 		app.mainLoop();
 	}
 
+	/**
+	 * Handle version and help CLI options.
+	 */
+	public static CliArguments defaultArgumentsHandling(String[] args) {
+		CliArguments options = new CliArguments();
+		List<String> arguments = Args.parseOrExit(options, args);
+
+		if (options.version) {
+			System.err.println("Version " + VERSION);
+			System.exit(0);
+		}
+
+		if (options.help) {
+			Args.usage(CliArguments.class);
+			System.exit(0);
+		}
+
+		if (arguments.size() > 0) {
+			System.err.println("Unexpected arguments");
+			Args.usage(CliArguments.class);
+			System.exit(1);
+		}
+		return options;
+	}
+
 	public AppCli(CliArguments options) throws IOException {
 		this.options = options;
 		createRecognizer();
 	}
 
+	/**
+	 * Create internal streamRecognizer or micRecognizer, according to options.
+	 */
 	protected void createRecognizer() throws IOException {
 		if (this.options.lang == null)
 			this.options.lang = getLanguage();
@@ -81,24 +94,28 @@ public class AppCli {
 			this.micRecognizer = new LiveSpeechRecognizer(configuration);
 	}
 
-	protected void pauseRecognition() {
-		if (this.micRecognizer != null)
-			this.micRecognizer.stopRecognition();
-		if (this.streamRecognizer != null)
-			this.streamRecognizer.stopRecognition();
+	protected synchronized void requestPauseRecognition() {
+		pauseRequested = true;
+		notifyAll();
 	}
 
-	protected void resumeRecognition() {
-		if (options.stdin) {
-			if (this.streamRecognizer != null)
-				this.streamRecognizer.startRecognition(System.in);
-		} else {
-			if (this.micRecognizer != null)
-				this.micRecognizer.startRecognition(false);
-		}
+	protected synchronized void requestExit() {
+		exitRequested = true;
+		notifyAll();
 	}
 
-	private String searchModelsDir(String lang) {
+	protected synchronized void requestResumeRecognition() {
+		pauseRequested = false;
+		notifyAll();
+	}
+
+	/**
+	 * Search for models directory for given language in common locations
+	 * 
+	 * @param lang
+	 * @return
+	 */
+	protected String searchModelsDir(String lang) {
 		String[] trials = { "~/.local/share/sphinx-lispeak-" + options.lang,
 				"/usr/local/share/sphinx-lispeak-" + options.lang, "/usr/share/sphinx-lispeak-" + options.lang,
 				"data" + File.separator + options.lang,
@@ -110,7 +127,7 @@ public class AppCli {
 	}
 
 	/**
-	 * Create a configuration object from options
+	 * Create a sphinx Configuration object from options
 	 * 
 	 * @return
 	 */
@@ -119,11 +136,15 @@ public class AppCli {
 		String dir = searchModelsDir(options.lang);
 
 		if (options.acousticmodel == null)
-			options.acousticmodel = dir + "/acoustic-model";
+			options.acousticmodel = dir + File.separator + "acoustic-model";
 		if (options.dictionary == null)
-			options.dictionary = dir + "/pronounciation-dictionary.dict";
-		if (options.languagemodel == null)
-			options.languagemodel = dir + "/language-model.lm.bin";
+			options.dictionary = dir + File.separator + "pronounciation-dictionary.dict";
+		if (options.languagemodel == null) {
+			if (new File(dir + File.separator + "language-model.lm.bin").exists())
+				options.languagemodel = dir + File.separator + "language-model.lm.bin";
+			else
+				options.languagemodel = dir + File.separator + "language-model.lm";
+		}
 
 		configuration.setAcousticModelPath(options.acousticmodel);
 		configuration.setDictionaryPath(options.dictionary);
@@ -132,6 +153,11 @@ public class AppCli {
 		return configuration;
 	}
 
+	/**
+	 * Read data from microphone or stdin, print text to stdout
+	 * 
+	 * @throws IOException
+	 */
 	public void mainLoop() throws IOException {
 
 		if (options.stdin)
@@ -143,8 +169,6 @@ public class AppCli {
 	/**
 	 * Read data from microphone, print text to stdout
 	 * 
-	 * @param configuration
-	 * @param os
 	 * @throws IOException
 	 */
 	protected void mainLoopMic() throws IOException {
@@ -158,17 +182,29 @@ public class AppCli {
 			System.err.format("Nbest: %s\n", result.getNbest(6));
 			// os.format("Words: %s\n", result.getWords());
 			// os.format("Lattica: %s\n", result.getLattice().getNodes());
+
+			if (exitRequested)
+				break;
+
+			if (pauseRequested) {
+				micRecognizer.stopRecognition();
+				while (pauseRequested)
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				if (exitRequested)
+					break;
+				micRecognizer.startRecognition(false);
+			}
 		}
-		// Pause recognition process. It can be resumed then with
-		// startRecognition(false).
 		micRecognizer.stopRecognition();
 	}
 
 	/**
 	 * Read data from stdin, print text to stdout
 	 * 
-	 * @param configuration
-	 * @param os
 	 * @throws IOException
 	 */
 	protected void mainLoopStream() throws IOException {
@@ -181,9 +217,23 @@ public class AppCli {
 			System.err.format("Nbest: %s\n", result.getNbest(6));
 			// os.format("Words: %s\n", result.getWords());
 			// os.format("Lattica: %s\n", result.getLattice().getNodes());
+
+			if (exitRequested)
+				break;
+
+			if (pauseRequested) {
+				streamRecognizer.stopRecognition();
+				while (pauseRequested)
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				if (exitRequested)
+					break;
+				streamRecognizer.startRecognition(System.in);
+			}
 		}
-		// Pause recognition process. It can be resumed then with
-		// startRecognition(false).
 		streamRecognizer.stopRecognition();
 	}
 
